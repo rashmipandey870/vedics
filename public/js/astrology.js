@@ -14,56 +14,148 @@ function renderKundliSVG(kundliChart, targetElementId = 'kundli-chart-container'
 
     window.activeKundliChart = kundliChart; // Store globally for house popup details
 
-    // Coordinate mapping for 12 Houses in North Indian Diamond Kundli
-    const houseCoords = {
-        1:  { rashiX: 200, rashiY: 90,  planetsX: 200, planetsY: 130 },
-        2:  { rashiX: 110, rashiY: 45,  planetsX: 110, planetsY: 75  },
-        3:  { rashiX: 45,  rashiY: 110, planetsX: 75,  planetsY: 110 },
-        4:  { rashiX: 100, rashiY: 200, planetsX: 120, planetsY: 230 },
-        5:  { rashiX: 45,  rashiY: 290, planetsX: 75,  planetsY: 290 },
-        6:  { rashiX: 110, rashiY: 355, planetsX: 110, planetsY: 325 },
-        7:  { rashiX: 200, rashiY: 310, planetsX: 200, planetsY: 270 },
-        8:  { rashiX: 290, rashiY: 355, planetsX: 290, planetsY: 325 },
-        9:  { rashiX: 355, rashiY: 290, planetsX: 325, planetsY: 290 },
-        10: { rashiX: 300, rashiY: 200, planetsX: 280, planetsY: 230 },
-        11: { rashiX: 355, rashiY: 110, planetsX: 325, planetsY: 110 },
-        12: { rashiX: 290, rashiY: 45,  planetsX: 290, planetsY: 75  }
+    // Exact geometric coordinates for 12 Houses in North Indian Diamond Kundli (400x400 viewBox)
+    const houseConfigs = {
+        1:  { polygon: "200,12 294,106 200,200 106,106", rashiX: 200, rashiY: 45,  centerX: 200, centerY: 110 },
+        2:  { polygon: "12,12 200,12 106,106",          rashiX: 106, rashiY: 38,  centerX: 106, centerY: 72  },
+        3:  { polygon: "12,12 106,106 12,200",          rashiX: 45,  rashiY: 98,  centerX: 52,  centerY: 132 },
+        4:  { polygon: "12,200 106,106 200,200 106,294", rashiX: 106, rashiY: 145, centerX: 106, centerY: 198 },
+        5:  { polygon: "12,200 106,294 12,388",          rashiX: 45,  rashiY: 275, centerX: 52,  centerY: 308 },
+        6:  { polygon: "12,388 106,294 200,388",          rashiX: 106, rashiY: 362, centerX: 106, centerY: 328 },
+        7:  { polygon: "200,200 294,294 200,388 106,294", rashiX: 200, rashiY: 355, centerX: 200, centerY: 288 },
+        8:  { polygon: "200,388 294,294 388,388",          rashiX: 294, rashiY: 362, centerX: 294, centerY: 328 },
+        9:  { polygon: "388,200 294,294 388,388",          rashiX: 355, rashiY: 275, centerX: 348, centerY: 308 },
+        10: { polygon: "200,200 294,106 388,200 294,294", rashiX: 294, rashiY: 145, centerX: 294, centerY: 198 },
+        11: { polygon: "388,12 388,200 294,106",          rashiX: 355, rashiY: 98,  centerX: 348, centerY: 132 },
+        12: { polygon: "200,12 388,12 294,106",          rashiX: 294, rashiY: 38,  centerX: 294, centerY: 72  }
     };
 
     let houseElements = '';
 
     kundliChart.houses.forEach(h => {
-        const coords = houseCoords[h.house];
-        const planetList = h.planets.map(p => typeof p === 'string' ? p.split(' ')[0] : p.symbol + p.name).join(' ');
+        const config = houseConfigs[h.house];
+        const planetsSVG = formatHousePlanetsSVG(h.house, h.planets, config.centerX, config.centerY);
 
         houseElements += `
-            <g class="kundli-house-group" onclick="showHouseDetailModal(${h.house})" style="cursor: pointer;">
-                <text x="${coords.rashiX}" y="${coords.rashiY}" class="kundli-rashi-num">${h.rashiId}</text>
-                <text x="${coords.planetsX}" y="${coords.planetsY}" class="kundli-planet-tag">${planetList}</text>
+            <g class="kundli-house-group" onclick="showHouseDetailModal(${h.house})">
+                <polygon points="${config.polygon}" class="kundli-house-poly" />
+                <text x="${config.rashiX}" y="${config.rashiY}" class="kundli-rashi-num">${h.rashiId}</text>
+                ${planetsSVG}
             </g>
         `;
     });
 
+    const vargaLabel = kundliChart.vargaCode || 'D1';
+
     const svgHTML = `
         <div class="kundli-svg-container">
             <svg viewBox="0 0 400 400" class="kundli-svg" xmlns="http://www.w3.org/2000/svg">
-                <!-- Outer Square -->
-                <rect x="10" y="10" width="380" height="380" fill="none" stroke="#d4af37" stroke-width="2"/>
-                
-                <!-- Diagonals -->
-                <line x1="10" y1="10" x2="390" y2="390" stroke="#d4af37" stroke-width="1.5"/>
-                <line x1="390" y1="10" x2="10" y2="390" stroke="#d4af37" stroke-width="1.5"/>
-                
-                <!-- Inner Diamond -->
-                <polygon points="200,10 390,200 200,390 10,200" fill="none" stroke="#d4af37" stroke-width="1.5"/>
-                
-                <!-- House Numbers & Planet Overlay -->
+                <defs>
+                    <linearGradient id="kundliBg" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#0b1120"/>
+                        <stop offset="100%" stop-color="#161e31"/>
+                    </linearGradient>
+                    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="rgba(212,175,55,0.12)"/>
+                        <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+                    </radialGradient>
+                </defs>
+
+                <!-- Outer Frame -->
+                <rect x="5" y="5" width="390" height="390" rx="10" fill="url(#kundliBg)" stroke="#d4af37" stroke-width="2.5"/>
+                <rect x="12" y="12" width="376" height="376" rx="6" fill="url(#centerGlow)" stroke="rgba(212, 175, 55, 0.4)" stroke-width="1"/>
+
+                <!-- Corner Ornaments -->
+                <circle cx="12" cy="12" r="4" fill="#d4af37"/>
+                <circle cx="388" cy="12" r="4" fill="#d4af37"/>
+                <circle cx="12" cy="388" r="4" fill="#d4af37"/>
+                <circle cx="388" cy="388" r="4" fill="#d4af37"/>
+
+                <!-- House Polygons & Overlay Data -->
                 ${houseElements}
+
+                <!-- Inner Diamond Lines Overlay for Crisp Borders -->
+                <polygon points="200,12 388,200 200,388 12,200" fill="none" stroke="#d4af37" stroke-width="1.5" pointer-events="none"/>
+                <line x1="12" y1="12" x2="388" y2="388" stroke="#d4af37" stroke-width="1.5" pointer-events="none"/>
+                <line x1="388" y1="12" x2="12" y2="388" stroke="#d4af37" stroke-width="1.5" pointer-events="none"/>
+
+                <!-- Chart Title Badge in Center -->
+                <g pointer-events="none">
+                    <circle cx="200" cy="200" r="16" fill="rgba(11, 17, 32, 0.95)" stroke="#d4af37" stroke-width="1.2"/>
+                    <text x="200" y="204" fill="#f5e4a3" font-family="serif" font-weight="bold" font-size="11" text-anchor="middle">${vargaLabel}</text>
+                </g>
             </svg>
         </div>
     `;
 
     container.innerHTML = svgHTML;
+}
+
+/**
+ * Formats planet representations inside an SVG house polygon
+ */
+function formatHousePlanetsSVG(houseNum, planetsArray, centerX, centerY) {
+    const abbrevMap = {
+        'Sun':     { abbr: 'Su', color: '#f59e0b' },
+        'Moon':    { abbr: 'Mo', color: '#f8fafc' },
+        'Mars':    { abbr: 'Ma', color: '#ef4444' },
+        'Mercury': { abbr: 'Me', color: '#34d399' },
+        'Jupiter': { abbr: 'Ju', color: '#fbbf24' },
+        'Venus':   { abbr: 'Ve', color: '#f472b6' },
+        'Saturn':  { abbr: 'Sa', color: '#60a5fa' },
+        'Rahu':    { abbr: 'Ra', color: '#c084fc' },
+        'Ketu':    { abbr: 'Ke', color: '#2dd4bf' }
+    };
+
+    let items = [];
+    
+    // Always mark Lagna (Lg) in House 1
+    if (houseNum === 1) {
+        items.push({ text: 'Lg', color: '#ffd700' });
+    }
+
+    if (planetsArray && Array.isArray(planetsArray)) {
+        planetsArray.forEach(p => {
+            let nameStr = typeof p === 'string' ? p.split(' ')[0] : p.name;
+            let mapped = abbrevMap[nameStr] || { abbr: nameStr.substring(0, 2), color: '#e0e7ff' };
+            let label = mapped.abbr;
+            if (p.isRetrograde) label += '(R)';
+            if (p.isVargottama) label += '⭐';
+            items.push({ text: label, color: mapped.color });
+        });
+    }
+
+    if (items.length === 0) return '';
+
+    if (items.length === 1) {
+        return `<text x="${centerX}" y="${centerY}" fill="${items[0].color}" font-weight="700" font-size="12" text-anchor="middle">${items[0].text}</text>`;
+    }
+
+    if (items.length === 2) {
+        return `
+            <text x="${centerX}" y="${centerY - 7}" fill="${items[0].color}" font-weight="700" font-size="11.5" text-anchor="middle">${items[0].text}</text>
+            <text x="${centerX}" y="${centerY + 8}" fill="${items[1].color}" font-weight="700" font-size="11.5" text-anchor="middle">${items[1].text}</text>
+        `;
+    }
+
+    if (items.length === 3) {
+        return `
+            <text x="${centerX}" y="${centerY - 13}" fill="${items[0].color}" font-weight="700" font-size="11" text-anchor="middle">${items[0].text}</text>
+            <text x="${centerX}" y="${centerY + 1}" fill="${items[1].color}" font-weight="700" font-size="11" text-anchor="middle">${items[1].text}</text>
+            <text x="${centerX}" y="${centerY + 15}" fill="${items[2].color}" font-weight="700" font-size="11" text-anchor="middle">${items[2].text}</text>
+        `;
+    }
+
+    let line1 = items.slice(0, Math.ceil(items.length / 2));
+    let line2 = items.slice(Math.ceil(items.length / 2));
+
+    let tspan1 = line1.map(it => `<tspan fill="${it.color}">${it.text}</tspan>`).join(' ');
+    let tspan2 = line2.map(it => `<tspan fill="${it.color}">${it.text}</tspan>`).join(' ');
+
+    return `
+        <text x="${centerX}" y="${centerY - 7}" font-weight="700" font-size="10.5" text-anchor="middle">${tspan1}</text>
+        <text x="${centerX}" y="${centerY + 8}" font-weight="700" font-size="10.5" text-anchor="middle">${tspan2}</text>
+    `;
 }
 
 /**
