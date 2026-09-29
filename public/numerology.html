@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numerology Suite - JyotishSetu</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <canvas id="star-canvas"></canvas>
+
+    <!-- Header / Navbar -->
+    <header class="site-header">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="brand-logo">
+                    <span class="brand-icon">🌌</span>
+                    <div>
+                        <span class="brand-name">JyotishSetu</span>
+                        <span class="brand-tagline">Vedic Birth Calculator</span>
+                    </div>
+                </a>
+
+                <button class="mobile-menu-btn" aria-label="Toggle Navigation">☰</button>
+
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="profile.html" class="nav-link">Cosmic Profile</a></li>
+                    <li><a href="numerology.html" class="nav-link active">Numerology</a></li>
+                    <li><a href="learn.html" class="nav-link">Learn Vedic</a></li>
+                    <li><a href="history.html" class="nav-link">Saved Profiles</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 2.5rem; padding-bottom: 4rem;">
+        
+        <!-- Header -->
+        <div class="section-header">
+            <h1 class="hero-title">Numerology <span class="gold-text">Calculator Suite</span></h1>
+            <p class="section-subtitle">Transparent mathematical calculation of Mulank, Bhagyank & Name Numbers</p>
+        </div>
+
+        <!-- Today's Number Card -->
+        <div id="today-number-container" style="margin-bottom: 2.5rem;"></div>
+
+        <!-- Interactive Calculator Form -->
+        <div class="glass-card" style="max-width: 750px; margin: 0 auto 3rem auto;">
+            <h3 style="color: var(--gold-light); margin-bottom: 1rem; text-align: center;">Calculate Your Numerology Numbers</h3>
+            <form id="numerologyCalcForm">
+                <div class="form-group">
+                    <label class="form-label" for="numName">Full Name</label>
+                    <input type="text" id="numName" class="form-control" placeholder="e.g. Rahul Sharma" value="Rahul Sharma" required>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="numDob">Date of Birth</label>
+                        <input type="date" id="numDob" class="form-control" value="2004-08-15" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="numSystem">Mapping System</label>
+                        <select id="numSystem" class="form-control">
+                            <option value="chaldean">Chaldean System (Traditional Vedic)</option>
+                            <option value="pythagorean">Pythagorean System (Western Classic)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; margin-top: 0.5rem;">
+                    🔢 Calculate Numerology Profile
+                </button>
+            </form>
+        </div>
+
+        <!-- Calculated Results Display Box -->
+        <div id="numerology-results-box" style="display: none; margin-bottom: 3.5rem;"></div>
+
+        <!-- Step-by-Step Breakdown Modal -->
+        <div id="calc-modal-overlay" class="modal-overlay">
+            <div class="modal-container">
+                <button class="modal-close-btn" onclick="closeCalcModal()">✕</button>
+                <div id="calc-modal-body"></div>
+            </div>
+        </div>
+
+        <!-- Numerology Compatibility Explorer Section -->
+        <section style="margin-bottom: 4rem;">
+            <div class="section-header">
+                <h2 class="section-title">Numerology <span class="gold-text">Compatibility Explorer</span></h2>
+                <p class="section-subtitle">Traditional relationship harmony based on core birth numbers</p>
+            </div>
+
+            <div class="glass-card" style="max-width: 700px; margin: 0 auto;">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="compatNumA">Person A Birth Number (1–9)</label>
+                        <select id="compatNumA" class="form-control">
+                            <option value="1">Number 1 (Sun)</option>
+                            <option value="2">Number 2 (Moon)</option>
+                            <option value="3">Number 3 (Jupiter)</option>
+                            <option value="4">Number 4 (Rahu)</option>
+                            <option value="5">Number 5 (Mercury)</option>
+                            <option value="6">Number 6 (Venus)</option>
+                            <option value="7">Number 7 (Ketu)</option>
+                            <option value="8">Number 8 (Saturn)</option>
+                            <option value="9">Number 9 (Mars)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="compatNumB">Person B Birth Number (1–9)</label>
+                        <select id="compatNumB" class="form-control">
+                            <option value="6">Number 6 (Venus)</option>
+                            <option value="1">Number 1 (Sun)</option>
+                            <option value="2">Number 2 (Moon)</option>
+                            <option value="3">Number 3 (Jupiter)</option>
+                            <option value="4">Number 4 (Rahu)</option>
+                            <option value="5">Number 5 (Mercury)</option>
+                            <option value="7">Number 7 (Ketu)</option>
+                            <option value="8">Number 8 (Saturn)</option>
+                            <option value="9">Number 9 (Mars)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="checkCompatBtn" class="btn btn-secondary" style="width: 100%;">⚡ Check Traditional Compatibility</button>
+                <div id="compat-result-box"></div>
+            </div>
+        </section>
+
+        <!-- Numbers 1 to 9 Profile Cards Showcase -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">Traditional <span class="gold-text">Number Profiles (1–9)</span></h2>
+                <p class="section-subtitle">Ruling planets, characteristics, and lucky associations</p>
+            </div>
+
+            <div class="core-profile-grid">
+                <!-- Number 1 -->
+                <div class="glass-card">
+                    <div class="num-card-badge">1</div>
+                    <h3 style="color: var(--gold-light);">The Leader</h3>
+                    <p style="font-size:0.85rem; color: var(--gold-primary); margin-bottom: 0.5rem;">Ruled by Sun (Surya)</p>
+                    <p style="font-size:0.88rem; margin-bottom: 0.75rem;">Independent, ambitious, pioneering, courageous.</p>
+                    <div style="font-size:0.82rem; color: var(--text-muted);">
+                        <p><strong>Lucky Colors:</strong> Gold, Yellow, Red</p>
+                        <p><strong>Lucky Days:</strong> Sunday, Monday</p>
+                    </div>
+                </div>
+
+                <!-- Number 2 -->
+                <div class="glass-card">
+                    <div class="num-card-badge">2</div>
+                    <h3 style="color: var(--gold-light);">The Diplomat</h3>
+                    <p style="font-size:0.85rem; color: var(--gold-primary); margin-bottom: 0.5rem;">Ruled by Moon (Chandra)</p>
+                    <p style="font-size:0.88rem; margin-bottom: 0.75rem;">Intuitive, peacemaker, gentle, imaginative.</p>
+                    <div style="font-size:0.82rem; color: var(--text-muted);">
+                        <p><strong>Lucky Colors:</strong> White, Silver, Green</p>
+                        <p><strong>Lucky Days:</strong> Monday, Friday</p>
+                    </div>
+                </div>
+
+                <!-- Number 3 -->
+                <div class="glass-card">
+                    <div class="num-card-badge">3</div>
+                    <h3 style="color: var(--gold-light);">The Educator</h3>
+                    <p style="font-size:0.85rem; color: var(--gold-primary); margin-bottom: 0.5rem;">Ruled by Jupiter (Guru)</p>
+                    <p style="font-size:0.88rem; margin-bottom: 0.75rem;">Wise, optimistic, creative, scholarly.</p>
+                    <div style="font-size:0.82rem; color: var(--text-muted);">
+                        <p><strong>Lucky Colors:</strong> Yellow, Saffron</p>
+                        <p><strong>Lucky Days:</strong> Thursday, Friday</p>
+                    </div>
+                </div>
+
+                <!-- Number 4 -->
+                <div class="glass-card">
+                    <div class="num-card-badge">4</div>
+                    <h3 style="color: var(--gold-light);">The Architect</h3>
+                    <p style="font-size:0.85rem; color: var(--gold-primary); margin-bottom: 0.5rem;">Ruled by Rahu</p>
+                    <p style="font-size:0.88rem; margin-bottom: 0.75rem;">Pragmatic, hard-working, disciplined, persistent.</p>
+                    <div style="font-size:0.82rem; color: var(--text-muted);">
+                        <p><strong>Lucky Colors:</strong> Blue, Gray</p>
+                        <p><strong>Lucky Days:</strong> Sunday, Saturday</p>
+                    </div>
+                </div>
+
+                <!-- Number 5 -->
+                <div class="glass-card">
+                    <div class="num-card-badge">5</div>
+                    <h3 style="color: var(--gold-light);">The Communicator</h3>
+                    <p style="font-size:0.85rem; color: var(--gold-primary); margin-bottom: 0.5rem;">Ruled by Mercury (Budha)</p>
+                    <p style="font-size:0.88rem; margin-bottom: 0.75rem;">Versatile, adaptable, quick-witted, freedom-loving.</p>
+                    <div style="font-size:0.82rem; color: var(--text-muted);">
+                        <p><strong>Lucky Colors:</strong> Green, Turquoise</p>
+                        <p><strong>Lucky Days:</strong> Wednesday, Friday</p>
+                    </div>
+                </div>
+
+                <!-- Number 6 -->
+                <div class="glass-card">
+                    <div class="num-card-badge">6</div>
+                    <h3 style="color: var(--gold-light);">The Harmonizer</h3>
+                    <p style="font-size:0.85rem; color: var(--gold-primary); margin-bottom: 0.5rem;">Ruled by Venus (Shukra)</p>
+                    <p style="font-size:0.88rem; margin-bottom: 0.75rem;">Loving, artistic, magnetic, family-oriented.</p>
+                    <div style="font-size:0.82rem; color: var(--text-muted);">
+                        <p><strong>Lucky Colors:</strong> Pink, Light Blue, White</p>
+                        <p><strong>Lucky Days:</strong> Friday, Tuesday</p>
+                    </div>
+                </div>
+
+                <!-- Number 7 -->
+                <div class="glass-card">
+                    <div class="num-card-badge">7</div>
+                    <h3 style="color: var(--gold-light);">The Seeker</h3>
+                    <p style="font-size:0.85rem; color: var(--gold-primary); margin-bottom: 0.5rem;">Ruled by Ketu</p>
+                    <p style="font-size:0.88rem; margin-bottom: 0.75rem;">Analytical, introspective, spiritual, intuitive.</p>
+                    <div style="font-size:0.82rem; color: var(--text-muted);">
+                        <p><strong>Lucky Colors:</strong> Light Yellow, Smoky Shades</p>
+                        <p><strong>Lucky Days:</strong> Sunday, Monday</p>
+                    </div>
+                </div>
+
+                <!-- Number 8 -->
+                <div class="glass-card">
+                    <div class="num-card-badge">8</div>
+                    <h3 style="color: var(--gold-light);">The Strategist</h3>
+                    <p style="font-size:0.85rem; color: var(--gold-primary); margin-bottom: 0.5rem;">Ruled by Saturn (Shani)</p>
+                    <p style="font-size:0.88rem; margin-bottom: 0.75rem;">Authoritative, patient, resilient, karmic builder.</p>
+                    <div style="font-size:0.82rem; color: var(--text-muted);">
+                        <p><strong>Lucky Colors:</strong> Dark Blue, Black</p>
+                        <p><strong>Lucky Days:</strong> Saturday, Friday</p>
+                    </div>
+                </div>
+
+                <!-- Number 9 -->
+                <div class="glass-card">
+                    <div class="num-card-badge">9</div>
+                    <h3 style="color: var(--gold-light);">The Humanitarian</h3>
+                    <p style="font-size:0.85rem; color: var(--gold-primary); margin-bottom: 0.5rem;">Ruled by Mars (Mangal)</p>
+                    <p style="font-size:0.88rem; margin-bottom: 0.75rem;">Courageous, compassionate, energetic, protective.</p>
+                    <div style="font-size:0.82rem; color: var(--text-muted);">
+                        <p><strong>Lucky Colors:</strong> Red, Crimson</p>
+                        <p><strong>Lucky Days:</strong> Tuesday, Thursday</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="disclaimer-box">
+                    <strong>Educational Disclaimer:</strong> Traditional numerological associations are provided strictly for educational purposes.
+                </div>
+                <p class="copyright-text">&copy; 2026 JyotishSetu — B.Tech Computer Science Project.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/numerology.js"></script>
+</body>
+</html>

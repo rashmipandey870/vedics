@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Birth Profiles - JyotishSetu</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <canvas id="star-canvas"></canvas>
+
+    <!-- Header / Navbar -->
+    <header class="site-header">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="brand-logo">
+                    <span class="brand-icon">🌌</span>
+                    <div>
+                        <span class="brand-name">JyotishSetu</span>
+                        <span class="brand-tagline">Vedic Birth Calculator</span>
+                    </div>
+                </a>
+
+                <button class="mobile-menu-btn" aria-label="Toggle Navigation">☰</button>
+
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="profile.html" class="nav-link">Cosmic Profile</a></li>
+                    <li><a href="numerology.html" class="nav-link">Numerology</a></li>
+                    <li><a href="learn.html" class="nav-link">Learn Vedic</a></li>
+                    <li><a href="history.html" class="nav-link active">Saved Profiles</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 2.5rem; padding-bottom: 4rem;">
+        
+        <!-- Header -->
+        <div class="section-header">
+            <h1 class="hero-title">Saved <span class="gold-text">Birth Reports</span></h1>
+            <p class="section-subtitle">Local MongoDB storage & active session calculation records</p>
+        </div>
+
+        <div id="storage-status-badge" style="text-align: center; margin-bottom: 2rem;"></div>
+
+        <!-- History List Container -->
+        <div id="history-list-grid" class="core-profile-grid"></div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="disclaimer-box">
+                    <strong>MongoDB Integration:</strong> Birth profiles are stored in local MongoDB (`mongodb://localhost:27017/jyotishsetu`) with automatic in-memory fallback.
+                </div>
+                <p class="copyright-text">&copy; 2026 JyotishSetu — B.Tech Computer Science Project.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', loadHistoryList);
+
+        async function loadHistoryList() {
+            const grid = document.getElementById('history-list-grid');
+            const badge = document.getElementById('storage-status-badge');
+            if (!grid) return;
+
+            grid.innerHTML = '<p style="text-align:center; width:100%;">Loading saved profiles...</p>';
+
+            try {
+                const res = await fetch('/api/profile/history');
+                const data = await res.json();
+
+                if (data.success) {
+                    if (badge) {
+                        badge.innerHTML = `
+                            <span class="hero-subtitle-badge">
+                                Storage Backend: <strong>${data.storageType}</strong> | Total Saved Records: <strong>${data.count}</strong>
+                            </span>
+                        `;
+                    }
+
+                    if (data.profiles.length === 0) {
+                        grid.innerHTML = `
+                            <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                                <h3>No saved profiles yet.</h3>
+                                <p style="margin: 1rem 0;">Calculate a profile on the home page and click "Save Report".</p>
+                                <a href="index.html" class="btn btn-primary">Calculate Profile Now</a>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    let html = '';
+                    data.profiles.forEach(p => {
+                        const dateStr = p.createdAt ? new Date(p.createdAt).toLocaleString() : 'Recent';
+                        html += `
+                            <div class="glass-card">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <h3 style="color: var(--gold-light); margin: 0;">${p.name}</h3>
+                                    <span style="font-size: 0.75rem; color: var(--text-muted);">${dateStr}</span>
+                                </div>
+                                
+                                <p style="font-size: 0.88rem; margin-bottom: 0.75rem;">
+                                    📅 ${p.dob} at ⏰ ${p.birthTime}<br>
+                                    📍 ${p.birthPlace}
+                                </p>
+
+                                <div style="background: rgba(255,255,255,0.03); padding: 0.75rem; border-radius: var(--radius-sm); font-size: 0.82rem; margin-bottom: 1rem;">
+                                    <p><strong>Rashi:</strong> ${p.rashi || 'Calculated'}</p>
+                                    <p><strong>Nakshatra:</strong> ${p.nakshatra || 'Calculated'} (Pada ${p.pada || 1})</p>
+                                    <p><strong>Lagna:</strong> ${p.lagna || 'Calculated'}</p>
+                                </div>
+
+                                <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="openSavedProfile('${encodeURIComponent(JSON.stringify(p))}')">
+                                    📂 Load into Cosmic Dashboard
+                                </button>
+                            </div>
+                        `;
+                    });
+
+                    grid.innerHTML = html;
+                }
+            } catch (err) {
+                grid.innerHTML = '<p style="text-align:center; color: var(--accent-red); width:100%;">Failed to load saved history.</p>';
+            }
+        }
+
+        function openSavedProfile(encodedJson) {
+            const p = JSON.parse(decodeURIComponent(encodedJson));
+            const formData = {
+                name: p.name,
+                dob: p.dob,
+                birthTime: p.birthTime,
+                birthPlace: p.birthPlace,
+                gender: p.gender || 'Not Specified',
+                latitude: p.latitude || 28.6139,
+                longitude: p.longitude || 77.2090
+            };
+            sessionStorage.setItem('jyotishsetu_birth_data', JSON.stringify(formData));
+            window.location.href = 'profile.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+/* ==========================================================================
+   JyotishSetu - Print Stylesheet for Birth Profile Reports
+   ========================================================================== */
+
+@media print {
+    /* Hide non-printable elements */
+    header.site-header,
+    footer.site-footer,
+    #star-canvas,
+    .no-print,
+    .btn,
+    .mobile-menu-btn,
+    .modal-overlay {
+        display: none !important;
+    }
+
+    body {
+        background: #ffffff !important;
+        color: #1a1a1a !important;
+        font-family: Arial, sans-serif !important;
+        font-size: 11pt !important;
+    }
+
+    .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Print Header */
+    .print-header-banner {
+        display: block !important;
+        text-align: center;
+        border-bottom: 2px solid #000;
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
+
+    .print-header-banner h1 {
+        font-size: 22pt !important;
+        color: #000 !important;
+        margin-bottom: 5px;
+    }
+
+    /* Adjust Cards & Grid for Paper */
+    .glass-card, .profile-card {
+        background: #fff !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        color: #000 !important;
+        page-break-inside: avoid;
+    }
+
+    .card-value, h1, h2, h3, h4 {
+        color: #000 !important;
+        -webkit-text-fill-color: initial !important;
+    }
+
+    .custom-table {
+        border: 1px solid #333 !important;
+    }
+
+    .custom-table th {
+        background: #f0f0f0 !important;
+        color: #000 !important;
+        border-bottom: 1px solid #333 !important;
+    }
+
+    .custom-table td {
+        border-bottom: 1px solid #ddd !important;
+        color: #000 !important;
+    }
+
+    .kundli-svg-container {
+        border: 2px solid #000 !important;
+        box-shadow: none !important;
+        background: #fff !important;
+    }
+
+    .kundli-svg line, .kundli-svg rect, .kundli-svg polygon {
+        stroke: #000 !important;
+    }
+
+    .kundli-rashi-num {
+        fill: #000 !important;
+    }
+
+    .kundli-planet-tag {
+        fill: #333 !important;
+    }
+
+    .card-expandable-content {
+        display: block !important;
+        color: #333 !important;
+    }
+}

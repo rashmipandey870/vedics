@@ -1,0 +1,287 @@
+/* ==========================================================================
+   JyotishSetu - Cosmic Profile Dashboard Stylesheet
+   ========================================================================== */
+
+/* User Header Banner */
+.user-profile-banner {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(14, 21, 38, 0.9) 100%);
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius-md);
+    padding: 1.75rem 2rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.user-banner-info h2 {
+    font-size: 1.85rem;
+    margin-bottom: 0.25rem;
+}
+
+.user-meta-chips {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.meta-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Core Profile Cards Grid */
+.core-profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.profile-card {
+    background: var(--bg-card);
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--transition-normal), border-color var(--transition-normal);
+}
+
+.profile-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gold-gradient);
+}
+
+.profile-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(212, 175, 55, 0.6);
+}
+
+.card-header-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+    display: inline-block;
+}
+
+.card-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.card-value {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    margin: 0.2rem 0 0.5rem 0;
+}
+
+.card-subtext {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.card-expand-toggle {
+    margin-top: auto;
+    font-size: 0.82rem;
+    color: var(--gold-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: none;
+    border: none;
+    padding: 0;
+    font-weight: 600;
+}
+
+.card-expand-toggle:hover {
+    color: var(--gold-light);
+}
+
+.card-expandable-content {
+    display: none;
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px dashed rgba(212, 175, 55, 0.2);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.card-expandable-content.open {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Kundli Chart Styling (North Indian Diamond Chart) */
+.kundli-chart-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+}
+
+.kundli-svg-container {
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 1 / 1;
+    background: rgba(14, 21, 38, 0.9);
+    border: 2px solid var(--gold-primary);
+    border-radius: var(--radius-md);
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+    position: relative;
+}
+
+.kundli-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.kundli-svg line, .kundli-svg rect, .kundli-svg polygon {
+    stroke: var(--gold-primary);
+    stroke-width: 1.5;
+}
+
+.kundli-rashi-num {
+    fill: #f5e4a3;
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: bold;
+    text-anchor: middle;
+}
+
+.kundli-planet-tag {
+    fill: #e0e7ff;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    text-anchor: middle;
+}
+
+/* Planetary Positions Table */
+.planetary-table-container {
+    overflow-x: auto;
+    margin: 1.5rem 0 3rem 0;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    text-align: left;
+}
+
+.custom-table th {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--gold-light);
+    font-family: var(--font-subheading);
+    font-weight: 600;
+    padding: 0.9rem 1.2rem;
+    border-bottom: 2px solid var(--gold-border);
+}
+
+.custom-table td {
+    padding: 0.85rem 1.2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+}
+
+.custom-table tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* Dasha Timeline */
+.dasha-container {
+    margin: 2.5rem 0;
+}
+
+.dasha-timeline-scroll {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+}
+
+.dasha-node {
+    flex: 0 0 135px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 0.65rem;
+    text-align: center;
+    transition: all var(--transition-fast);
+}
+
+.dasha-node.active {
+    background: rgba(212, 175, 55, 0.15);
+    border-color: var(--gold-primary);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+.dasha-node-planet {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.dasha-node.active .dasha-node-planet {
+    color: var(--gold-light);
+}
+
+.dasha-node-years {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+}
+
+/* Numerology Cards on Dashboard */
+.numerology-highlights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.num-card-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: var(--gold-gradient);
+    color: #070b14;
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}

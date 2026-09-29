@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JyotishSetu - Vedic Astrology & Numerology Calculator</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <canvas id="star-canvas"></canvas>
+
+    <!-- Header / Navbar -->
+    <header class="site-header">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="brand-logo">
+                    <span class="brand-icon">🌌</span>
+                    <div>
+                        <span class="brand-name">JyotishSetu</span>
+                        <span class="brand-tagline">Vedic Birth Calculator</span>
+                    </div>
+                </a>
+
+                <button class="mobile-menu-btn" aria-label="Toggle Navigation">☰</button>
+
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link active">Home</a></li>
+                    <li><a href="profile.html" class="nav-link">Cosmic Profile</a></li>
+                    <li><a href="numerology.html" class="nav-link">Numerology</a></li>
+                    <li><a href="learn.html" class="nav-link">Learn Vedic</a></li>
+                    <li><a href="history.html" class="nav-link">Saved Profiles</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-subtitle-badge">
+                <span>✨ Traditional Vedic Astrology & Numerology Engine</span>
+            </div>
+            <h1 class="hero-title">
+                Discover Your <span class="gold-text">Cosmic Profile</span>
+            </h1>
+            <p class="hero-description">
+                Calculate your Rashi, Nakshatra, Pada, Paya, planetary positions, Vimshottari Dashas and numerology from your birth details through transparent traditional algorithms.
+            </p>
+            <div class="hero-ctas">
+                <a href="#birthFormSection" class="btn btn-primary">Calculate My Profile</a>
+                <a href="learn.html" class="btn btn-secondary">Explore Vedic Concepts</a>
+            </div>
+        </section>
+
+        <!-- Birth Details Form Section -->
+        <section id="birthFormSection" style="max-width: 800px; margin: 0 auto 4rem auto;">
+            <div class="glass-card">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.8rem;">Enter <span class="gold-text">Birth Details</span></h2>
+                    <p>Enter exact date, time, and location of birth for precise Sidereal calculations.</p>
+                </div>
+
+                <form id="mainBirthForm">
+                    <div class="form-group">
+                        <label class="form-label" for="fullName">Full Name</label>
+                        <input type="text" id="fullName" class="form-control" placeholder="e.g. Rahul Sharma" required>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="dob">Date of Birth</label>
+                            <input type="date" id="dob" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="birthTime">Time of Birth (24h)</label>
+                            <input type="time" id="birthTime" class="form-control" value="10:30" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="birthPlace">Birth Place City</label>
+                            <input type="text" id="birthPlace" class="form-control" placeholder="e.g. Deoghar, Jharkhand" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="gender">Gender (Optional)</label>
+                            <select id="gender" class="form-control">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other / Prefer not to say</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Location Auto-fill presets & Geolocation -->
+                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px dashed var(--gold-border); border-radius: var(--radius-sm); padding: 1.25rem; margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.85rem;">
+                            <span style="font-size: 0.9rem; font-weight: 600; color: var(--gold-light);">📍 Geographic Coordinates (Latitude & Longitude)</span>
+                            <button type="button" id="useGeoLocationBtn" class="btn btn-secondary btn-sm">📍 Use My Location</button>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 0.85rem;">
+                            <label class="form-label" for="birthCityPreset">Select Indian / Major City Preset</label>
+                            <select id="birthCityPreset" class="form-control">
+                                <option value="">-- Choose Preset City (Optional) --</option>
+                                <option value="deoghar">Deoghar, Jharkhand (24.4826°, 86.6961°)</option>
+                                <option value="delhi">New Delhi (28.6139°, 77.2090°)</option>
+                                <option value="mumbai">Mumbai (19.0760°, 72.8777°)</option>
+                                <option value="kolkata">Kolkata (22.5726°, 88.3639°)</option>
+                                <option value="chennai">Chennai (13.0827°, 80.2707°)</option>
+                                <option value="bengaluru">Bengaluru (12.9716°, 77.5946°)</option>
+                                <option value="hyderabad">Hyderabad (17.3850°, 78.4867°)</option>
+                                <option value="varanasi">Varanasi (25.3176°, 82.9739°)</option>
+                                <option value="london">London (51.5074°, -0.1278°)</option>
+                                <option value="newyork">New York (40.7128°, -74.0060°)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" for="latitude">Latitude (°N)</label>
+                                <input type="number" step="any" id="latitude" class="form-control" value="28.6139" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" for="longitude">Longitude (°E)</label>
+                                <input type="number" step="any" id="longitude" class="form-control" value="77.2090" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.9rem; font-size: 1.1rem;">
+                        ✨ Calculate Cosmic Profile
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Feature Highlights -->
+        <section style="margin-bottom: 4rem;">
+            <div class="section-header">
+                <h2 class="section-title">Core <span class="gold-text">Features</span></h2>
+                <p class="section-subtitle">Everything needed for a complete college-level B.Tech presentation</p>
+            </div>
+
+            <div class="core-profile-grid">
+                <div class="glass-card">
+                    <span class="card-header-icon">🌙</span>
+                    <h3>Rashi & Nakshatra</h3>
+                    <p>Calculates Sidereal Moon Sign, Nakshatra, Pada, and Nakshatra Lord with transparent mathematical formulas.</p>
+                </div>
+                <div class="glass-card">
+                    <span class="card-header-icon">🏛️</span>
+                    <h3>Paya & Lagna</h3>
+                    <p>Determines foundational metal (Gold, Silver, Copper, Iron) and eastern horizon Ascendant (Lagna).</p>
+                </div>
+                <div class="glass-card">
+                    <span class="card-header-icon">📜</span>
+                    <h3>North Indian Kundli</h3>
+                    <p>Clean HTML/SVG 12-house chart visualization showing house Rashi numbers and Graha placements.</p>
+                </div>
+                <div class="glass-card">
+                    <span class="card-header-icon">⏳</span>
+                    <h3>Vimshottari Dasha</h3>
+                    <p>Generates 120-year planetary timeline with current active Mahadasha and Antardasha breakdown.</p>
+                </div>
+                <div class="glass-card">
+                    <span class="card-header-icon">🔢</span>
+                    <h3>Numerology Suite</h3>
+                    <p>Calculates Mulank, Bhagyank, and Name Number (Chaldean) with step-by-step mathematical reduction.</p>
+                </div>
+                <div class="glass-card">
+                    <span class="card-header-icon">🖨️</span>
+                    <h3>MongoDB & Print Report</h3>
+                    <p>Saves birth profiles locally to MongoDB and provides a clean print-ready stylesheet for PDF export.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="disclaimer-box">
+                    <strong>Educational Disclaimer:</strong> JyotishSetu provides astrological and numerological calculations based on traditional selected methodology strictly for educational and informational purposes. Results are derived from transparent mathematical rule-engines and are not presented as scientific facts.
+                </div>
+                <p class="copyright-text">
+                    &copy; 2026 JyotishSetu — College Full Stack Project | B.Tech Computer Science viva-ready codebase.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('mainBirthForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('fullName').value.trim(),
+                dob: document.getElementById('dob').value,
+                birthTime: document.getElementById('birthTime').value,
+                birthPlace: document.getElementById('birthPlace').value.trim(),
+                gender: document.getElementById('gender').value,
+                latitude: parseFloat(document.getElementById('latitude').value),
+                longitude: parseFloat(document.getElementById('longitude').value)
+            };
+            sessionStorage.setItem('jyotishsetu_birth_data', JSON.stringify(data));
+            window.location.href = 'profile.html';
+        });
+    </script>
+</body>
+</html>

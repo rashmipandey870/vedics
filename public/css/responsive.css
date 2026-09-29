@@ -1,0 +1,66 @@
+/* ==========================================================================
+   JyotishSetu - Responsive Media Queries
+   ========================================================================== */
+
+@media (max-width: 992px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .form-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* Mobile navigation toggle support */
+        position: absolute;
+        top: 76px;
+        left: 0;
+        width: 100%;
+        background: rgba(7, 11, 20, 0.98);
+        border-bottom: 1px solid var(--gold-border);
+        flex-direction: column;
+        padding: 1.5rem;
+        gap: 1.25rem;
+    }
+
+    .nav-links.mobile-open {
+        display: flex;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+    }
+
+    .hero-ctas {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-ctas .btn {
+        width: 100%;
+    }
+
+    .user-profile-banner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .core-profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .numerology-highlights-grid {
+        grid-template-columns: 1fr;
+    }
+}
