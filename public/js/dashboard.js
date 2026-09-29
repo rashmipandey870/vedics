@@ -55,6 +55,9 @@ async function loadFullProfile(formData) {
             renderVargaSelector(data.vargaCharts, data.vargottamaPlanets);
             renderSelectedVargaChart('D1');
 
+            // Render Vedic Yogas & Life Benefits
+            renderYogasSection(data.yogas, 'yogas-section-container');
+
             renderDashaSection(data.dasha, 'dasha-section-container');
             renderNumerologySummary(data.numerology);
 
@@ -428,3 +431,49 @@ window.saveCurrentProfile = async function() {
         alert("Failed to connect to database API.");
     }
 };
+
+/**
+ * Renders Vedic Yogas & Life Benefits Section
+ */
+function renderYogasSection(yogas, containerId = 'yogas-section-container') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    if (!yogas || yogas.length === 0) {
+        container.innerHTML = `
+            <div class="glass-card text-center" style="padding: 2rem; margin-bottom: 3rem;">
+                <p style="color: var(--text-secondary); margin: 0;">No prominent classical Yogas detected in the primary birth chart. General planetary aspects apply.</p>
+            </div>
+        `;
+        return;
+    }
+
+    let cardsHTML = yogas.map(y => `
+        <div class="glass-card" style="margin-bottom: 1.25rem; border-left: 4px solid var(--gold-primary); background: rgba(14, 21, 38, 0.75);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <h3 style="color: var(--gold-light); font-size: 1.2rem; margin: 0;">${y.title}</h3>
+                <span class="meta-chip" style="color: var(--gold-light); border-color: var(--gold-border);">${y.category}</span>
+            </div>
+            
+            <p style="font-size: 0.88rem; color: var(--gold-primary); margin-bottom: 0.75rem;">
+                <strong>Forming Planets:</strong> ${y.formingPlanets.join(', ')}
+            </p>
+
+            <p style="font-size: 0.92rem; color: var(--text-primary); margin-bottom: 0.75rem; line-height: 1.6;">
+                <strong>Condition:</strong> ${y.description}
+            </p>
+
+            <div style="background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-bottom: 0.5rem;">
+                <p style="font-size: 0.9rem; color: var(--text-primary); margin: 0; line-height: 1.6;">
+                    <strong style="color: var(--gold-light);">✨ Life Benefits & Effects:</strong> ${y.benefit}
+                </p>
+            </div>
+
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">
+                <em>Rule Engine Basis:</em> ${y.calculationRule}
+            </p>
+        </div>
+    `).join('');
+
+    container.innerHTML = cardsHTML;
+}

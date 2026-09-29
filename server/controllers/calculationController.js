@@ -8,6 +8,7 @@ const { getRashiFromLongitude, getNakshatraFromLongitude, calculatePaya, getPlan
 const { calculateVargaCharts } = require('../calculations/varga');
 const { calculateVimshottariDasha } = require('../calculations/dashaCalculator');
 const { calculateMulank, calculateBhagyank, calculateNameNumber, calculateTodayNumber, evaluateCompatibility, indianPlanetaryMap } = require('../calculations/numerology');
+const { calculateVedicYogas } = require('../calculations/yogas');
 
 const rashis = require('../../data/rashis');
 const nakshatras = require('../../data/nakshatras');
@@ -56,7 +57,10 @@ exports.calculateFullProfile = (req, res) => {
         // 7. Varga Charts (D1, D4, D9 Navamsha, D10 Dashamsha + Vargottama detection)
         const vargaData = calculateVargaCharts(astroPositions, astroPositions.lagna);
 
-        // 8. Vimshottari Dasha Calculation
+        // 8. Vedic Yogas & Life Benefits Engine
+        const yogasInfo = calculateVedicYogas(planetaryTable, lagnaRashi.rashiId, vargaData.vargottamaPlanets);
+
+        // 9. Vimshottari Dasha Calculation
         const dashaInfo = calculateVimshottariDasha(astroPositions.moon, dob);
 
         // 9. Numerology Summary
@@ -168,6 +172,7 @@ exports.calculateFullProfile = (req, res) => {
             planetaryAspects,
             vargaCharts: vargaData.charts,
             vargottamaPlanets: vargaData.vargottamaPlanets,
+            yogas: yogasInfo,
             astronomySteps: astroPositions.calculationSteps,
             kundliChart: vargaData.charts.D1,
             dasha: dashaInfo,
