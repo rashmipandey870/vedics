@@ -2,7 +2,7 @@
  * RashmiSutra - Express Server Entry Point
  * 
  * "Vedic Astrology & Numerology Calculator"
- * Built by Rashmi Pandey for B.Tech Computer Science Viva Presentation.
+ * Built by Rashmi Pandey.
  */
 
 const express = require('express');

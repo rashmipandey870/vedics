@@ -4,7 +4,7 @@
  * Performs astronomical coordinate transformations and planetary Sidereal positions.
  * Methodology: Nirayana System with Lahiri (Chitrapaksha) Ayanamsha.
  * 
- * Built by Rashmi Pandey for B.Tech Computer Science Viva Presentation.
+ * Built by Rashmi Pandey.
  */
 
 /**

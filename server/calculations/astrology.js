@@ -2,7 +2,7 @@
  * RashmiSutra - Vedic Astrology Rule Engine
  * 
  * Maps longitudes to Rashi, Nakshatra, Pada, Paya, and Kundli House placements.
- * Includes explicit calculation breakdown generators for B.Tech Viva presentation.
+ * Includes explicit calculation breakdown generators for presentation.
  * 
  * Author: Rashmi Pandey
  */
