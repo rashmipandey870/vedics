@@ -61,15 +61,18 @@
             <!-- Core Profile Cards (Rashi, Nakshatra, Pada, Lord, Paya, Lagna, Sun, Moon) -->
             <div class="section-header">
                 <h2 class="section-title">Core <span class="gold-text">Vedic Profile</span></h2>
-                <p class="section-subtitle">Primary astrological markers derived at birth (Click 🧮 View Math for viva breakdown)</p>
+                <p class="section-subtitle">Primary astrological markers derived at birth (Click 🧮 View Math for calculation breakdown)</p>
             </div>
             <div id="core-cards-grid" class="core-profile-grid"></div>
 
-            <!-- Kundli Birth Chart Visualization Section -->
+            <!-- Kundli Birth Chart & Varga Divisional Charts Section -->
             <div class="section-header" style="margin-top: 3.5rem;">
-                <h2 class="section-title">Birth Chart <span class="gold-text">Overview</span></h2>
-                <p class="section-subtitle">North Indian Style Diamond Kundli Grid (Click any house for Bhava details)</p>
+                <h2 class="section-title">Divisional <span class="gold-text">Varga Charts</span></h2>
+                <p class="section-subtitle">Switch between D1 (Rashi), D4 (Property), D9 (Navamsha), and D10 (Career) charts</p>
             </div>
+
+            <!-- Varga Selector Container -->
+            <div id="varga-selector-container"></div>
 
             <div class="glass-card" style="margin-bottom: 3rem;">
                 <div id="kundli-chart-container" class="kundli-chart-wrapper"></div>
@@ -80,8 +83,8 @@
 
             <!-- Planetary Positions Table Section -->
             <div class="section-header">
-                <h2 class="section-title">Planetary <span class="gold-text">Positions</span></h2>
-                <p class="section-subtitle">Exact Sidereal degrees and house placement of Navagraha</p>
+                <h2 class="section-title">Planetary <span class="gold-text">Positions & Dignities</span></h2>
+                <p class="section-subtitle">Exact Sidereal degrees, house placement, dignity, combustion, and retrograde status</p>
             </div>
 
             <div class="glass-card" style="margin-bottom: 3.5rem;">
@@ -93,12 +96,16 @@
                                 <th>Zodiac Sign (Rashi)</th>
                                 <th>Sign Degree</th>
                                 <th>Kundli House</th>
+                                <th>Planetary Dignity</th>
                             </tr>
                         </thead>
                         <tbody id="planetary-table-body"></tbody>
                     </table>
                 </div>
             </div>
+
+            <!-- Graha Drishti (Aspects) Container -->
+            <div id="planetary-aspects-container"></div>
 
             <!-- Vimshottari Dasha Section -->
             <div class="section-header">

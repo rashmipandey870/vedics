@@ -4,9 +4,10 @@
  */
 
 const { calculatePlanetaryPositions } = require('../calculations/astronomy');
-const { getRashiFromLongitude, getNakshatraFromLongitude, calculatePaya, getPlanetaryPositionsTable } = require('../calculations/astrology');
+const { getRashiFromLongitude, getNakshatraFromLongitude, calculatePaya, getPlanetaryPositionsTable, calculatePlanetaryAspects } = require('../calculations/astrology');
+const { calculateVargaCharts } = require('../calculations/varga');
 const { calculateVimshottariDasha } = require('../calculations/dashaCalculator');
-const { calculateMulank, calculateBhagyank, calculateNameNumber, calculateTodayNumber, evaluateCompatibility } = require('../calculations/numerology');
+const { calculateMulank, calculateBhagyank, calculateNameNumber, calculateTodayNumber, evaluateCompatibility, indianPlanetaryMap } = require('../calculations/numerology');
 
 const rashis = require('../../data/rashis');
 const nakshatras = require('../../data/nakshatras');
@@ -46,13 +47,19 @@ exports.calculateFullProfile = (req, res) => {
         const moonHouse = ((moonRashi.rashiId - lagnaRashi.rashiId + 12) % 12) + 1;
         const payaInfo = calculatePaya(moonHouse, lagnaRashi.name, moonRashi.name);
 
-        // 5. Planetary Positions Table
+        // 5. Planetary Positions Table (with Dignity, Combustion, Retrograde)
         const planetaryTable = getPlanetaryPositionsTable(astroPositions, lagnaRashi.rashiId);
 
-        // 6. Vimshottari Dasha Calculation
+        // 6. Graha Drishti (Planetary Aspects)
+        const planetaryAspects = calculatePlanetaryAspects(planetaryTable);
+
+        // 7. Varga Charts (D1, D4, D9 Navamsha, D10 Dashamsha + Vargottama detection)
+        const vargaData = calculateVargaCharts(astroPositions, astroPositions.lagna);
+
+        // 8. Vimshottari Dasha Calculation
         const dashaInfo = calculateVimshottariDasha(astroPositions.moon, dob);
 
-        // 7. Numerology Summary
+        // 9. Numerology Summary
         const birthDay = parseInt(dob.split('-')[2], 10);
         const mulankRes = calculateMulank(birthDay);
         const bhagyankRes = calculateBhagyank(dob);
@@ -65,10 +72,10 @@ exports.calculateFullProfile = (req, res) => {
             "3rd House (Sahaja Bhava) - Courage, Siblings, Communication",
             "4th House (Matru Bhava) - Mother, Home, Vehicles, Comforts",
             "5th House (Putra Bhava) - Children, Intellect, Speculation",
-            "6th House (Shatru Bhava) - Health, Enemies, Daily Service",
+            "6th House (Shatru Bhava) - Health, Obstacles, Daily Service",
             "7th House (Kalatra Bhava) - Spouse, Partnerships, Trade",
-            "8th House (Randhra Bhava) - Longevity, Transformation, Occult",
-            "9th House (Bhagya Bhava) - Luck, Higher Wisdom, Guru, Dharma",
+            "8th House (Randhra Bhava) - Transformation, Longevity, Occult",
+            "9th House (Bhagya Bhava) - Higher Knowledge, Guru, Dharma, Luck",
             "10th House (Karma Bhava) - Career, Profession, Public Honor",
             "11th House (Labha Bhava) - Gains, Ambition, Social Network",
             "12th House (Vyaya Bhava) - Expenses, Moksha, Foreign Lands"
@@ -89,8 +96,10 @@ exports.calculateFullProfile = (req, res) => {
             methodologyMeta: {
                 zodiac: "Sidereal (Nirayana)",
                 ayanamsha: `Lahiri (Chitrapaksha) - ${astroPositions.ayanamsha}°`,
+                primaryChart: "D1 Rashi Chart",
+                divisionalCharts: "D1, D4, D9 (Navamsha), D10 (Dashamsha)",
                 dashaSystem: "Vimshottari (120 Years)",
-                numerologySystem: "Chaldean Letter Reduction"
+                numerologySystem: "Indian / Chaldean Letter Mapping"
             },
             coreProfile: {
                 rashi: {
@@ -156,30 +165,11 @@ exports.calculateFullProfile = (req, res) => {
                 }
             },
             planetaryPositions: planetaryTable,
+            planetaryAspects,
+            vargaCharts: vargaData.charts,
+            vargottamaPlanets: vargaData.vargottamaPlanets,
             astronomySteps: astroPositions.calculationSteps,
-            kundliChart: {
-                lagnaRashiId: lagnaRashi.rashiId,
-                lagnaRashiName: lagnaRashi.name,
-                houses: Array.from({ length: 12 }, (_, i) => {
-                    const houseNum = i + 1;
-                    const rashiIdForHouse = ((lagnaRashi.rashiId - 1 + i) % 12) + 1;
-                    const planetsInHouse = planetaryTable.filter(p => p.house === houseNum);
-                    return {
-                        house: houseNum,
-                        bhavaName: houseBhavaNames[i],
-                        rashiId: rashiIdForHouse,
-                        rashiName: rashis[rashiIdForHouse].name,
-                        rashiSanskrit: rashis[rashiIdForHouse].sanskrit,
-                        rashiRuler: rashis[rashiIdForHouse].ruler,
-                        planets: planetsInHouse.map(p => ({
-                            symbol: p.symbol,
-                            name: p.planet,
-                            sanskrit: p.sanskrit,
-                            degree: p.degree
-                        }))
-                    };
-                })
-            },
+            kundliChart: vargaData.charts.D1,
             dasha: dashaInfo,
             numerology: {
                 mulank: mulankRes.mulank,
@@ -187,7 +177,8 @@ exports.calculateFullProfile = (req, res) => {
                 nameNumber: nameNumRes.nameNumber,
                 mulankData: mulankRes,
                 bhagyankData: bhagyankRes,
-                nameNumberData: nameNumRes
+                nameNumberData: nameNumRes,
+                indianPlanetaryMap
             }
         };
 
@@ -202,7 +193,7 @@ exports.calculateFullProfile = (req, res) => {
 };
 
 /**
- * Calculates Numerology Details with step-by-step math
+ * Calculates Numerology Details
  * POST /api/calculate/numerology
  */
 exports.calculateNumerologyModule = (req, res) => {
@@ -227,7 +218,8 @@ exports.calculateNumerologyModule = (req, res) => {
             mulank: mulankData,
             bhagyank: bhagyankData,
             nameNumber: nameData,
-            todayNumber: todayData
+            todayNumber: todayData,
+            indianPlanetaryMap
         });
     } catch (err) {
         console.error("Error in numerology calculation:", err);
@@ -236,7 +228,7 @@ exports.calculateNumerologyModule = (req, res) => {
 };
 
 /**
- * Calculates Compatibility between two birth numbers
+ * Calculates Symmetric Numerology Compatibility
  * POST /api/calculate/compatibility
  */
 exports.calculateCompatibilityModule = (req, res) => {

@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 let currentProfileData = null;
+let activeVargaCode = 'D1';
 
 async function loadFullProfile(formData) {
     const loadingBanner = document.getElementById('dashboard-loading');
@@ -48,7 +49,12 @@ async function loadFullProfile(formData) {
             renderUserBanner(data.userMeta, data.methodologyMeta);
             renderCoreCards(data.coreProfile);
             renderPlanetaryTable(data.planetaryPositions);
-            renderKundliSVG(data.kundliChart, 'kundli-chart-container');
+            renderPlanetaryAspectsTable(data.planetaryAspects);
+            
+            // Render Varga Charts Selector & Kundli Chart
+            renderVargaSelector(data.vargaCharts, data.vargottamaPlanets);
+            renderSelectedVargaChart('D1');
+
             renderDashaSection(data.dasha, 'dasha-section-container');
             renderNumerologySummary(data.numerology);
 
@@ -239,17 +245,122 @@ function renderPlanetaryTable(planets) {
 
     let rowsHTML = '';
     planets.forEach(p => {
+        const combustBadge = p.isCombust ? `<span class="meta-chip" style="color:#f87171; border-color:rgba(248,113,113,0.4);">Combust (${p.combustDiff}°)</span>` : '';
+        const retroBadge = p.isRetrograde ? `<span class="meta-chip" style="color:#a855f7; border-color:rgba(168,85,247,0.4);">Retrograde (Vakra)</span>` : '';
+
         rowsHTML += `
             <tr>
-                <td><strong>${p.symbol} ${p.planet}</strong> (${p.sanskrit})</td>
+                <td>
+                    <strong>${p.symbol} ${p.planet}</strong> (${p.sanskrit})
+                    <div style="margin-top: 2px;">${combustBadge} ${retroBadge}</div>
+                </td>
                 <td><span class="gold-text">${p.sign}</span> (${p.signSanskrit})</td>
                 <td>${p.degree}</td>
                 <td>House ${p.house}</td>
+                <td><span style="font-size: 0.85rem; color: var(--gold-light);">${p.dignity}</span></td>
             </tr>
         `;
     });
 
     tbody.innerHTML = rowsHTML;
+}
+
+function renderPlanetaryAspectsTable(aspects) {
+    const el = document.getElementById('planetary-aspects-container');
+    if (!el || !aspects) return;
+
+    let rows = aspects.map(a => `
+        <tr>
+            <td><strong>${a.symbol} ${a.planet}</strong></td>
+            <td>House ${a.sourceHouse}</td>
+            <td>Aspects Houses: <strong class="gold-text">${a.targetHouses.map(h => `House ${h}`).join(', ')}</strong></td>
+        </tr>
+    `).join('');
+
+    el.innerHTML = `
+        <div class="glass-card" style="margin-bottom: 3.5rem;">
+            <h3 style="color: var(--gold-light); margin-bottom: 0.5rem;">Graha Drishti (Planetary Aspects)</h3>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+                All Grahas cast a 7th house aspect. Mars (4th, 7th, 8th), Jupiter (5th, 7th, 9th), and Saturn (3rd, 7th, 10th) cast special Parashari aspects.
+            </p>
+            <div class="planetary-table-container">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Graha (Planet)</th>
+                            <th>Placed House</th>
+                            <th>Aspected Houses (Graha Drishti)</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>
+        </div>
+    `;
+}
+
+function renderVargaSelector(vargaCharts, vargottamaPlanets) {
+    const el = document.getElementById('varga-selector-container');
+    if (!el || !vargaCharts) return;
+
+    let vargottamaBadgeHTML = '';
+    if (vargottamaPlanets && vargottamaPlanets.length > 0) {
+        vargottamaBadgeHTML = `
+            <div style="margin-bottom: 1.25rem; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold-border); border-radius: var(--radius-sm); padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1.2rem;">🌟</span>
+                <span style="font-size: 0.9rem;"><strong>Vargottama Grahas:</strong> ${vargottamaPlanets.join(', ')} occupy the exact same sign in D1 (Rashi) and D9 (Navamsha), granting exceptional inner strength.</span>
+            </div>
+        `;
+    }
+
+    el.innerHTML = `
+        ${vargottamaBadgeHTML}
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
+            <button class="btn btn-secondary varga-tab-btn active" onclick="switchVargaChart('D1')">D1 — Rashi</button>
+            <button class="btn btn-secondary varga-tab-btn" onclick="switchVargaChart('D4')">D4 — Chaturthamsha</button>
+            <button class="btn btn-secondary varga-tab-btn" onclick="switchVargaChart('D9')">D9 — Navamsha</button>
+            <button class="btn btn-secondary varga-tab-btn" onclick="switchVargaChart('D10')">D10 — Dashamsha</button>
+        </div>
+        <div id="varga-info-box" style="text-align: center; margin-bottom: 1rem;"></div>
+    `;
+}
+
+window.switchVargaChart = function(vargaCode) {
+    if (!currentProfileData || !currentProfileData.vargaCharts) return;
+    
+    activeVargaCode = vargaCode;
+
+    // Update active tab buttons
+    const btns = document.querySelectorAll('.varga-tab-btn');
+    btns.forEach(b => {
+        if (b.textContent.startsWith(vargaCode)) {
+            b.classList.add('active');
+            b.style.borderColor = 'var(--gold-primary)';
+            b.style.color = 'var(--gold-light)';
+        } else {
+            b.classList.remove('active');
+            b.style.borderColor = 'var(--gold-border)';
+            b.style.color = 'var(--text-primary)';
+        }
+    });
+
+    renderSelectedVargaChart(vargaCode);
+};
+
+function renderSelectedVargaChart(vargaCode) {
+    if (!currentProfileData || !currentProfileData.vargaCharts) return;
+    const vargaObj = currentProfileData.vargaCharts[vargaCode];
+    if (!vargaObj) return;
+
+    const infoBox = document.getElementById('varga-info-box');
+    if (infoBox) {
+        infoBox.innerHTML = `
+            <h3 style="color: var(--gold-light);">${vargaObj.title}</h3>
+            <p style="font-size: 0.9rem; max-width: 750px; margin: 0.3rem auto 0 auto;">${vargaObj.description}</p>
+        `;
+    }
+
+    renderKundliSVG(vargaObj, 'kundli-chart-container');
 }
 
 function renderNumerologySummary(num) {
@@ -265,7 +376,7 @@ function renderNumerologySummary(num) {
         </div>
         <div class="glass-card text-center">
             <div class="num-card-badge">${num.bhagyank}</div>
-            <h3>Bhagyank (Life Path)</h3>
+            <h3>Bhagyank (Life Path / Destiny)</h3>
             <p style="font-size: 0.9rem; margin: 0.3rem 0 0.85rem 0;">${num.bhagyankData.profile.title}</p>
             <button class="btn btn-secondary btn-sm" onclick='showCalculationStepsModal("Bhagyank Calculation", ${JSON.stringify(num.bhagyankData.steps)})'>🧮 View Reduction Steps</button>
         </div>

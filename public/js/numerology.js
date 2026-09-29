@@ -1,5 +1,6 @@
 /**
- * JyotishSetu - Dedicated Numerology Module Frontend Logic
+ * RashmiSutra - Dedicated Numerology Module Frontend Logic
+ * Author: Rashmi Pandey
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -54,7 +55,7 @@ function renderNumerologyResults(data) {
     resultsBox.innerHTML = `
         <div style="text-align: center; margin-bottom: 2rem;">
             <h2>Your <span class="gold-text">Numerology Profile</span></h2>
-            <p>Calculated using traditional mathematical digit reduction.</p>
+            <p>Calculated using traditional mathematical digit reduction (${nameNumber.system.toUpperCase()} Mapping).</p>
         </div>
 
         <div class="numerology-highlights-grid">
@@ -63,16 +64,16 @@ function renderNumerologyResults(data) {
                 <div class="num-card-badge">${mulank.mulank}</div>
                 <h3>Mulank (Birth Number)</h3>
                 <p style="margin: 0.4rem 0;"><strong>${mulank.profile.title}</strong></p>
-                <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">Ruled by ${mulank.profile.planet}</p>
+                <p style="font-size: 0.88rem; color: var(--gold-primary); margin-bottom: 1rem;">Ruled by ${mulank.graha.planet}</p>
                 <button class="btn btn-secondary btn-sm" onclick="showCalculationModal('mulank')">Show Calculation Step-by-Step</button>
             </div>
 
             <!-- Bhagyank Card -->
             <div class="glass-card text-center">
                 <div class="num-card-badge">${bhagyank.bhagyank}</div>
-                <h3>Bhagyank (Life Path)</h3>
+                <h3>Bhagyank (Destiny Number)</h3>
                 <p style="margin: 0.4rem 0;"><strong>${bhagyank.profile.title}</strong></p>
-                <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">Ruled by ${bhagyank.profile.planet}</p>
+                <p style="font-size: 0.88rem; color: var(--gold-primary); margin-bottom: 1rem;">Ruled by ${bhagyank.graha.planet}</p>
                 <button class="btn btn-secondary btn-sm" onclick="showCalculationModal('bhagyank')">Show Calculation Step-by-Step</button>
             </div>
 
@@ -81,7 +82,7 @@ function renderNumerologyResults(data) {
                 <div class="num-card-badge">${nameNumber.nameNumber}</div>
                 <h3>Name Number (${nameNumber.system.toUpperCase()})</h3>
                 <p style="margin: 0.4rem 0;"><strong>${nameNumber.profile.title}</strong></p>
-                <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">Ruled by ${nameNumber.profile.planet}</p>
+                <p style="font-size: 0.88rem; color: var(--gold-primary); margin-bottom: 1rem;">Ruled by ${nameNumber.graha.planet}</p>
                 <button class="btn btn-secondary btn-sm" onclick="showCalculationModal('nameNumber')">Show Calculation Step-by-Step</button>
             </div>
         </div>
@@ -108,7 +109,7 @@ window.showCalculationModal = function(type) {
 
     modalBody.innerHTML = `
         <h3 style="color: var(--gold-light); margin-bottom: 0.5rem;">Step-by-Step Math Breakdown</h3>
-        <p style="font-size: 0.9rem; margin-bottom: 1.25rem;">Transparent digit reduction process for college viva demonstration.</p>
+        <p style="font-size: 0.9rem; margin-bottom: 1.25rem;">Transparent digit reduction process for demonstration.</p>
         ${stepsHTML}
     `;
 
@@ -147,9 +148,14 @@ function initCompatibilityTool() {
                     const c = data.compatibility;
                     resBox.innerHTML = `
                         <div class="glass-card" style="margin-top: 1.5rem;">
-                            <h4 style="color: var(--gold-light); margin-bottom: 0.4rem;">Compatibility Result: Number ${c.numA} & Number ${c.numB}</h4>
-                            <div class="hero-subtitle-badge" style="margin-bottom: 0.75rem;">${c.category}</div>
-                            <p>${c.description}</p>
+                            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.75rem;">
+                                <h4 style="color: var(--gold-light); margin:0;">
+                                    Number ${c.numA} (${c.grahaA.planet}) ⚡ Number ${c.numB} (${c.grahaB.planet})
+                                </h4>
+                                <span class="hero-subtitle-badge" style="margin:0;">${c.category}</span>
+                            </div>
+                            <p style="font-size: 0.92rem; margin-bottom: 0.75rem;">${c.description}</p>
+                            <p style="font-size: 0.78rem; color: var(--text-muted); italic;">${c.disclaimer}</p>
                         </div>
                     `;
                 }
@@ -179,7 +185,7 @@ async function loadTodayNumber() {
                     <div>
                         <span class="card-label">Universal Day Number (${t.dateString})</span>
                         <h3 style="color: var(--gold-light); margin: 0.2rem 0;">${t.profile.title}</h3>
-                        <p style="font-size: 0.88rem;">Theme: ${t.profile.themes} | Ruled by ${t.profile.planet}</p>
+                        <p style="font-size: 0.88rem;">Ruled by ${t.graha.planet} | Theme: ${t.profile.themes}</p>
                     </div>
                 </div>
             `;

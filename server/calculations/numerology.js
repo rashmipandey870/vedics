@@ -1,27 +1,45 @@
 /**
- * Numerology Calculation Engine
+ * RashmiSutra - Numerology Calculation Engine
  * 
  * Functions:
  * 1. Mulank (Birth Day Number)
- * 2. Bhagyank (Life Path / Total DOB Number)
- * 3. Name Number (Chaldean & Pythagorean Letter Mapping)
- * 4. Step-by-Step Calculation Breakdown Generator
- * 5. Daily Profile / Today's Number
- * 6. Numerology Compatibility
+ * 2. Bhagyank / Destiny Number (Total DOB Reduction)
+ * 3. Name Number (Chaldean Vedic System & Pythagorean System)
+ * 4. Symmetric Numerology Compatibility Explorer
+ * 5. Master Number Handling Option
+ * 6. Today's Universal Date Number
+ * 
+ * Author: Rashmi Pandey
  */
 
 const numerologyData = require('../../data/numerology');
 
+// Indian / Chaldean Planetary Number Mapping
+const indianPlanetaryMap = {
+    1: { planet: "Sun (Surya)", sanskrit: "सूर्य", symbol: "☀️" },
+    2: { planet: "Moon (Chandra)", sanskrit: "चन्द्र", symbol: "🌕" },
+    3: { planet: "Jupiter (Guru)", sanskrit: "गुरु", symbol: "♃" },
+    4: { planet: "Rahu (North Node)", sanskrit: "राहु", symbol: "☊" },
+    5: { planet: "Mercury (Budha)", sanskrit: "बुध", symbol: "☿" },
+    6: { planet: "Venus (Shukra)", sanskrit: "शुक्र", symbol: "♀" },
+    7: { planet: "Ketu (South Node)", sanskrit: "केतु", symbol: "☋" },
+    8: { planet: "Saturn (Shani)", sanskrit: "शनि", symbol: "♄" },
+    9: { planet: "Mars (Mangal)", sanskrit: "मंगल", symbol: "♂" }
+};
+
 /**
- * Reduces a number to a single digit (1-9) by repeatedly summing its digits.
- * Input: num (integer)
- * Output: { singleDigit, steps: Array of strings }
+ * Reduces a number to a single digit (1-9) or detects master numbers (11, 22, 33)
  */
-function reduceToSingleDigit(num) {
+function reduceToSingleDigit(num, preserveMasterNumbers = false) {
     let current = Math.abs(num);
     const steps = [`Initial Value: ${current}`];
 
     while (current > 9) {
+        if (preserveMasterNumbers && [11, 22, 33].includes(current)) {
+            steps.push(`Detected Master Number: ${current}`);
+            break;
+        }
+
         const digits = String(current).split('').map(Number);
         const sum = digits.reduce((acc, d) => acc + d, 0);
         steps.push(`${digits.join(' + ')} = ${sum}`);
@@ -35,40 +53,36 @@ function reduceToSingleDigit(num) {
 }
 
 /**
- * Calculates Mulank (Birth Number) from the Day of Birth
- * Input: day (integer 1-31)
- * Output: { mulank, steps, profile }
+ * Calculates Mulank (Birth Day Number)
  */
 function calculateMulank(day) {
     const dayNum = Number(day);
     const reduction = reduceToSingleDigit(dayNum);
     const mulank = reduction.result;
     const profile = numerologyData.numberProfiles[mulank];
+    const graha = indianPlanetaryMap[mulank];
 
-    const steps = [
-        `Birth Day: ${dayNum}`
-    ];
+    const steps = [`Birth Day: ${dayNum}`];
     if (dayNum > 9) {
         const digits = String(dayNum).split('').join(' + ');
         steps.push(`Formula: ${digits} = ${mulank}`);
     } else {
-        steps.push(`Day ${dayNum} is already a single digit.`);
+        steps.push(`Day ${dayNum} is a single digit.`);
     }
 
     return {
         mulank,
+        graha,
         steps,
         profile
     };
 }
 
 /**
- * Calculates Bhagyank (Life Path Number) from Date of Birth (YYYY-MM-DD)
- * Input: dobString (e.g. "2004-08-15")
- * Output: { bhagyank, steps, profile }
+ * Calculates Bhagyank / Destiny Number from Date of Birth (YYYY-MM-DD)
  */
 function calculateBhagyank(dobString) {
-    const cleanDigits = dobString.replace(/\D/g, ''); // Extract all numbers
+    const cleanDigits = dobString.replace(/\D/g, '');
     const digitArray = cleanDigits.split('').map(Number);
     const initialSum = digitArray.reduce((a, b) => a + b, 0);
 
@@ -87,18 +101,19 @@ function calculateBhagyank(dobString) {
 
     const bhagyank = current;
     const profile = numerologyData.numberProfiles[bhagyank];
+    const graha = indianPlanetaryMap[bhagyank];
 
     return {
         bhagyank,
+        graha,
         steps,
-        profile
+        profile,
+        methodologyNote: "In RashmiSutra, Bhagyank is calculated by reducing the complete date of birth according to the selected Indian numerology convention."
     };
 }
 
 /**
- * Calculates Name Number based on Chaldean or Pythagorean mapping
- * Input: fullName (string), system ('chaldean' | 'pythagorean')
- * Output: { nameNumber, system, letterBreakdown, steps, profile }
+ * Calculates Name Number (Chaldean or Pythagorean system)
  */
 function calculateNameNumber(fullName, system = 'chaldean') {
     const map = system === 'pythagorean' ? numerologyData.pythagoreanMap : numerologyData.chaldeanMap;
@@ -129,6 +144,7 @@ function calculateNameNumber(fullName, system = 'chaldean') {
 
     const nameNumber = current === 0 ? 1 : current;
     const profile = numerologyData.numberProfiles[nameNumber];
+    const graha = indianPlanetaryMap[nameNumber];
 
     return {
         nameNumber,
@@ -136,14 +152,63 @@ function calculateNameNumber(fullName, system = 'chaldean') {
         totalSum: sum,
         letterBreakdown,
         steps,
-        profile
+        profile,
+        graha
+    };
+}
+
+/**
+ * Evaluates Symmetric Numerology Compatibility between two numbers (1-9)
+ * Guarantees compatibility(A, B) === compatibility(B, A)
+ */
+function evaluateCompatibility(numA, numB) {
+    const nA = Math.max(1, Math.min(9, Number(numA)));
+    const nB = Math.max(1, Math.min(9, Number(numB)));
+
+    const grahaA = indianPlanetaryMap[nA];
+    const grahaB = indianPlanetaryMap[nB];
+
+    const compatDataA = numerologyData.compatibility[nA];
+    const compatDataB = numerologyData.compatibility[nB];
+
+    const isBestA = compatDataA.best.includes(nB);
+    const isBestB = compatDataB.best.includes(nA);
+    const isChallA = compatDataA.challenging.includes(nB);
+    const isChallB = compatDataB.challenging.includes(nA);
+
+    let category = "Neutral / Balanced Partnership";
+    let description = "";
+
+    if (isBestA || isBestB) {
+        category = "Harmonious Partnership";
+        description = `Number ${nA} (${grahaA.planet}) and Number ${nB} (${grahaB.planet}) share natural planetary alignment and supportive energetic themes.`;
+    } else if (isChallA || isChallB) {
+        category = "Contrasting Partnership (Growth Opportunity)";
+        description = `Number ${nA} (${grahaA.planet}) and Number ${nB} (${grahaB.planet}) possess contrasting core planetary energies, offering opportunities for personal growth through communication.`;
+    } else {
+        category = "Neutral / Balanced Partnership";
+        description = `Number ${nA} (${grahaA.planet}) and Number ${nB} (${grahaB.planet}) maintain a balanced relationship in traditional numerological mapping.`;
+    }
+
+    const minNum = Math.min(nA, nB);
+    const maxNum = Math.max(nA, nB);
+
+    return {
+        numA: nA,
+        numB: nB,
+        grahaA,
+        grahaB,
+        pairKey: `${minNum}-${maxNum}`,
+        category,
+        description,
+        disclaimer: "This is a traditional educational numerological comparison, not a scientific compatibility measurement.",
+        profileA: numerologyData.numberProfiles[nA],
+        profileB: numerologyData.numberProfiles[nB]
     };
 }
 
 /**
  * Calculates Today's Universal Date Number
- * Input: optional Date object (defaults to today)
- * Output: { todayNumber, dateString, profile }
  */
 function calculateTodayNumber(dateObj = new Date()) {
     const dateStr = dateObj.toISOString().split('T')[0];
@@ -151,48 +216,17 @@ function calculateTodayNumber(dateObj = new Date()) {
     return {
         todayNumber: res.bhagyank,
         dateString: dateStr,
-        profile: res.profile
-    };
-}
-
-/**
- * Evaluates Numerology Compatibility between two numbers (1-9)
- * Input: numA (1-9), numB (1-9)
- * Output: { numA, numB, rating, description, category }
- */
-function evaluateCompatibility(numA, numB) {
-    const nA = Math.max(1, Math.min(9, Number(numA)));
-    const nB = Math.max(1, Math.min(9, Number(numB)));
-
-    const compatData = numerologyData.compatibility[nA];
-    let category = "Moderate";
-    let description = "";
-
-    if (compatData.best.includes(nB)) {
-        category = "High Compatibility (Harmonious)";
-        description = `Number ${nA} and Number ${nB} share natural alignment, mutual understanding, and complementary strengths. Traditional numerology considers this partnership highly supportive.`;
-    } else if (compatData.challenging.includes(nB)) {
-        category = "Growth Opportunity (Challenging)";
-        description = `Number ${nA} and Number ${nB} possess contrasting core energies. While it requires conscious communication, it provides strong potential for personal growth and balancing opposites.`;
-    } else {
-        category = "Balanced Partnership (Neutral)";
-        description = `Number ${nA} and Number ${nB} maintain a balanced relationship. With clear shared goals, they work effectively together.`;
-    }
-
-    return {
-        numA: nA,
-        numB: nB,
-        category,
-        description,
-        profileA: numerologyData.numberProfiles[nA],
-        profileB: numerologyData.numberProfiles[nB]
+        profile: res.profile,
+        graha: res.graha
     };
 }
 
 module.exports = {
+    indianPlanetaryMap,
+    reduceToSingleDigit,
     calculateMulank,
     calculateBhagyank,
     calculateNameNumber,
-    calculateTodayNumber,
-    evaluateCompatibility
+    evaluateCompatibility,
+    calculateTodayNumber
 };

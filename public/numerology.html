@@ -42,7 +42,7 @@
         <!-- Header -->
         <div class="section-header">
             <h1 class="hero-title">Numerology <span class="gold-text">Calculator Suite</span></h1>
-            <p class="section-subtitle">Transparent mathematical calculation of Mulank, Bhagyank & Name Numbers</p>
+            <p class="section-subtitle">Transparent mathematical calculation of Mulank, Bhagyank (Destiny) & Name Numbers</p>
         </div>
 
         <!-- Today's Number Card -->
@@ -63,9 +63,9 @@
                         <input type="date" id="numDob" class="form-control" value="2004-08-15" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="numSystem">Mapping System</label>
+                        <label class="form-label" for="numSystem">Numerology System</label>
                         <select id="numSystem" class="form-control">
-                            <option value="chaldean">Chaldean System (Traditional Vedic)</option>
+                            <option value="chaldean">Indian / Chaldean System (Traditional Vedic)</option>
                             <option value="pythagorean">Pythagorean System (Western Classic)</option>
                         </select>
                     </div>
@@ -88,11 +88,45 @@
             </div>
         </div>
 
-        <!-- Numerology Compatibility Explorer Section -->
+        <!-- Indian Planetary Number Mapping Overview -->
         <section style="margin-bottom: 4rem;">
             <div class="section-header">
-                <h2 class="section-title">Numerology <span class="gold-text">Compatibility Explorer</span></h2>
-                <p class="section-subtitle">Traditional relationship harmony based on core birth numbers</p>
+                <h2 class="section-title">Indian / Chaldean <span class="gold-text">Planetary Number System</span></h2>
+                <p class="section-subtitle">Traditional Graha mappings for numbers 1 through 9</p>
+            </div>
+
+            <div class="glass-card">
+                <div class="planetary-table-container">
+                    <table class="custom-table" style="text-align: center;">
+                        <thead>
+                            <tr>
+                                <th>Number</th>
+                                <th>Governing Graha (Planet)</th>
+                                <th>Sanskrit Name</th>
+                                <th>Key Characteristics</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>1</strong></td><td>☀️ Sun</td><td>सूर्य (Surya)</td><td>Leadership, vitality, pioneering spirit, independence</td></tr>
+                            <tr><td><strong>2</strong></td><td>🌕 Moon</td><td>चन्द्र (Chandra)</td><td>Intuition, diplomacy, gentle care, harmony</td></tr>
+                            <tr><td><strong>3</strong></td><td>♃ Jupiter</td><td>गुरु (Guru)</td><td>Wisdom, optimism, education, spiritual growth</td></tr>
+                            <tr><td><strong>4</strong></td><td>☊ Rahu</td><td>राहु (Rahu)</td><td>Structure, endurance, unconventional success</td></tr>
+                            <tr><td><strong>5</strong></td><td>☿ Mercury</td><td>बुध (Budha)</td><td>Communication, quick agility, commerce, versatility</td></tr>
+                            <tr><td><strong>6</strong></td><td>♀ Venus</td><td>शुक्र (Shukra)</td><td>Love, fine arts, domestic harmony, luxury</td></tr>
+                            <tr><td><strong>7</strong></td><td>☋ Ketu</td><td>केतु (Ketu)</td><td>Introspection, research, research depth, spirituality</td></tr>
+                            <tr><td><strong>8</strong></td><td>♄ Saturn</td><td>शनि (Shani)</td><td>Discipline, hard work, patience, karmic builder</td></tr>
+                            <tr><td><strong>9</strong></td><td>♂ Mars</td><td>मंगल (Mangal)</td><td>Courage, humanitarian drive, energy, valor</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Symmetric Numerology Compatibility Explorer Section -->
+        <section style="margin-bottom: 4rem;">
+            <div class="section-header">
+                <h2 class="section-title">Symmetric <span class="gold-text">Compatibility Explorer</span></h2>
+                <p class="section-subtitle">Traditional relationship harmony between birth numbers (A + B ≡ B + A)</p>
             </div>
 
             <div class="glass-card" style="max-width: 700px; margin: 0 auto;">
@@ -115,12 +149,12 @@
                     <div class="form-group">
                         <label class="form-label" for="compatNumB">Person B Birth Number (1–9)</label>
                         <select id="compatNumB" class="form-control">
-                            <option value="6">Number 6 (Venus)</option>
+                            <option value="5">Number 5 (Mercury)</option>
                             <option value="1">Number 1 (Sun)</option>
                             <option value="2">Number 2 (Moon)</option>
                             <option value="3">Number 3 (Jupiter)</option>
                             <option value="4">Number 4 (Rahu)</option>
-                            <option value="5">Number 5 (Mercury)</option>
+                            <option value="6">Number 6 (Venus)</option>
                             <option value="7">Number 7 (Ketu)</option>
                             <option value="8">Number 8 (Saturn)</option>
                             <option value="9">Number 9 (Mars)</option>
@@ -128,7 +162,7 @@
                     </div>
                 </div>
 
-                <button id="checkCompatBtn" class="btn btn-secondary" style="width: 100%;">⚡ Check Traditional Compatibility</button>
+                <button id="checkCompatBtn" class="btn btn-secondary" style="width: 100%;">⚡ Compare Birth Numbers</button>
                 <div id="compat-result-box"></div>
             </div>
         </section>
