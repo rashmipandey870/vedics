@@ -1,16 +1,18 @@
 /**
- * JyotishSetu - Astrology Rendering Utilities
- * Renders Core Profile Cards and North Indian Style Kundli SVG Chart
+ * RashmiSutra - Frontend Astrology Rendering & Calculation Details Engine
+ * Renders North Indian Kundli SVG Chart with interactive House Popups and Viva Calculation Modals.
+ * 
+ * Author: Rashmi Pandey
  */
 
 /**
- * Renders North Indian Style Kundli Chart (SVG)
- * Input: kundliChart object containing lagnaRashiId and houses array
- * Output: SVG string inserted into target element
+ * Renders North Indian Style Kundli Chart (SVG) with interactive House click/hover popups
  */
 function renderKundliSVG(kundliChart, targetElementId = 'kundli-chart-container') {
     const container = document.getElementById(targetElementId);
     if (!container || !kundliChart) return;
+
+    window.activeKundliChart = kundliChart; // Store globally for house popup details
 
     // Coordinate mapping for 12 Houses in North Indian Diamond Kundli
     const houseCoords = {
@@ -32,11 +34,13 @@ function renderKundliSVG(kundliChart, targetElementId = 'kundli-chart-container'
 
     kundliChart.houses.forEach(h => {
         const coords = houseCoords[h.house];
-        const planetList = h.planets.map(p => p.split(' ')[0]).join(' ');
+        const planetList = h.planets.map(p => typeof p === 'string' ? p.split(' ')[0] : p.symbol + p.name).join(' ');
 
         houseElements += `
-            <text x="${coords.rashiX}" y="${coords.rashiY}" class="kundli-rashi-num">${h.rashiId}</text>
-            <text x="${coords.planetsX}" y="${coords.planetsY}" class="kundli-planet-tag">${planetList}</text>
+            <g class="kundli-house-group" onclick="showHouseDetailModal(${h.house})" style="cursor: pointer;">
+                <text x="${coords.rashiX}" y="${coords.rashiY}" class="kundli-rashi-num">${h.rashiId}</text>
+                <text x="${coords.planetsX}" y="${coords.planetsY}" class="kundli-planet-tag">${planetList}</text>
+            </g>
         `;
     });
 
@@ -63,8 +67,63 @@ function renderKundliSVG(kundliChart, targetElementId = 'kundli-chart-container'
 }
 
 /**
- * Formats expandable card toggle handlers
+ * Interactive Modal Popup when user clicks any House in Kundli SVG
  */
+window.showHouseDetailModal = function(houseNum) {
+    if (!window.activeKundliChart) return;
+    const houseInfo = window.activeKundliChart.houses.find(h => h.house === houseNum);
+    if (!houseInfo) return;
+
+    const modal = document.getElementById('calc-modal-overlay');
+    const body = document.getElementById('calc-modal-body');
+    if (!modal || !body) return;
+
+    let planetsListHTML = houseInfo.planets.length > 0 
+        ? houseInfo.planets.map(p => `<li><strong>${p.symbol || ''} ${p.name || p}</strong> (${p.sanskrit || ''}) — ${p.degree || ''}</li>`).join('')
+        : '<em>No Grahas placed in this house at birth.</em>';
+
+    body.innerHTML = `
+        <h3 style="color: var(--gold-light); margin-bottom: 0.4rem;">House ${houseInfo.house} Breakdown</h3>
+        <p style="font-size: 0.88rem; color: var(--gold-primary); margin-bottom: 1rem;">${houseInfo.bhavaName}</p>
+        
+        <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.25rem; font-size: 0.9rem;">
+            <p><strong>Placed Rashi:</strong> ${houseInfo.rashiName} (${houseInfo.rashiSanskrit || ''}) — Sign #${houseInfo.rashiId}</p>
+            <p><strong>Rashi Ruler:</strong> ${houseInfo.rashiRuler || 'N/A'}</p>
+        </div>
+
+        <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Grahas (Planets) in House ${houseInfo.house}:</h4>
+        <ul style="padding-left: 1.25rem; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.8;">
+            ${planetsListHTML}
+        </ul>
+    `;
+
+    modal.classList.add('active');
+};
+
+/**
+ * Universal Calculation Breakdown Modal Handler for Viva Presentation
+ */
+window.showCalculationStepsModal = function(title, stepsArray) {
+    const modal = document.getElementById('calc-modal-overlay');
+    const body = document.getElementById('calc-modal-body');
+    if (!modal || !body || !stepsArray) return;
+
+    let stepsHTML = stepsArray.map((s, idx) => `
+        <div style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--gold-primary); padding: 0.75rem 1rem; margin-bottom: 0.75rem; border-radius: 4px;">
+            <span style="font-size: 0.75rem; color: var(--gold-light); display: block; margin-bottom: 2px;">Step ${idx + 1}</span>
+            <code style="font-size: 0.92rem; color: var(--text-primary); font-family: monospace;">${s}</code>
+        </div>
+    `).join('');
+
+    body.innerHTML = `
+        <h3 style="color: var(--gold-light); margin-bottom: 0.3rem;">How was this calculated?</h3>
+        <p style="font-size: 0.88rem; color: var(--gold-primary); margin-bottom: 1.25rem;">${title} — Mathematical & Rule-Engine Pipeline</p>
+        ${stepsHTML}
+    `;
+
+    modal.classList.add('active');
+};
+
 function attachCardExpandListeners() {
     const buttons = document.querySelectorAll('.card-expand-toggle');
     buttons.forEach(btn => {

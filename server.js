@@ -1,8 +1,8 @@
 /**
- * JyotishSetu - Express Server Entry Point
+ * RashmiSutra - Express Server Entry Point
  * 
  * "Vedic Astrology & Numerology Calculator"
- * Educational full-stack project for B.Tech CS Viva presentation.
+ * Built by Rashmi Pandey for B.Tech Computer Science Viva Presentation.
  */
 
 const express = require('express');
@@ -14,7 +14,7 @@ const apiRoutes = require('./server/routes/apiRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/jyotishsetu';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/rashmisutra';
 
 // Middleware
 app.use(cors());
@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Mount API routes
 app.use('/api', apiRoutes);
 
-// Catch-all route to serve static HTML files gracefully
+// Page Routing
 app.get('/profile', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'profile.html'));
 });
@@ -40,24 +40,29 @@ app.get('/learn', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'learn.html'));
 });
 
+app.get('/methodology', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'methodology.html'));
+});
+
 app.get('/history', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'history.html'));
 });
 
-// Graceful local MongoDB connection
+// Graceful local MongoDB connection setup
 mongoose.connect(MONGO_URI, {
-    serverSelectionTimeoutMS: 3000 // Fast 3-second timeout for local DB check
+    serverSelectionTimeoutMS: 3000 // 3-second timeout for local DB connection check
 }).then(() => {
-    console.log('✅ Connected to local MongoDB at:', MONGO_URI);
+    console.log('✅ Connected to local MongoDB database at:', MONGO_URI);
 }).catch((err) => {
-    console.log('⚠️ [MongoDB Note] Local MongoDB server not detected on localhost:27017.');
-    console.log('ℹ️ Application is running in Fallback Session Mode. Profile saving will operate seamlessly in-memory!');
+    console.log('⚠️ [MongoDB Note] Local MongoDB daemon not detected on localhost:27017.');
+    console.log('ℹ️ RashmiSutra is operating in Session Fallback Mode (Profiles will save in-memory).');
 });
 
 // Start Server
 app.listen(PORT, () => {
-    console.log(`===========================================================`);
-    console.log(`🌌 JyotishSetu Server running on http://localhost:${PORT}`);
-    console.log(`📜 Educational Vedic Astrology & Numerology Calculator`);
-    console.log(`===========================================================`);
+    console.log(`================================================================`);
+    console.log(`🌌 RashmiSutra Server active at http://localhost:${PORT}`);
+    console.log(`📜 Vedic Astrology • Numerology • Dasha Engine`);
+    console.log(`👩‍💻 Built by Rashmi Pandey | B.Tech Computer Science Project`);
+    console.log(`================================================================`);
 });

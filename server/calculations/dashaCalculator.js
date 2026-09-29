@@ -1,27 +1,26 @@
 /**
- * Vimshottari Dasha Calculator Engine
+ * RashmiSutra - Vimshottari Dasha Calculator Engine
  * 
  * Algorithm:
- * 1. Find Moon's Nakshatra and its ruling planet (Lord).
- * 2. Calculate the fraction of Nakshatra remaining at birth.
- * 3. Multiply remaining fraction by the Lord's standard Mahadasha duration to get balance at birth.
- * 4. Chain the 9 planetary Mahadashas in sequence for 120 total years.
- * 5. Calculate Antardashas (sub-periods) proportionately: SubPeriodYears = (MahadashaYears * SubPlanetYears) / 120.
+ * 1. Find Moon's Sidereal Nakshatra and its ruling Graha (Lord).
+ * 2. Calculate the remaining portion of Nakshatra at birth: RemainingFraction = 1 - (ElapsedDegrees / 13.3333°).
+ * 3. Multiply RemainingFraction by the Lord's total Mahadasha duration to find starting balance.
+ * 4. Chain the 9 planetary Mahadashas in fixed sequence for 120 total years:
+ *    Ketu (7y) -> Venus (20y) -> Sun (6y) -> Moon (10y) -> Mars (7y) -> Rahu (18y) -> Jupiter (16y) -> Saturn (19y) -> Mercury (17y)
+ * 5. Calculate Antardashas (sub-periods): SubPeriodYears = (MahadashaYears * SubLordYears) / 120.
+ * 
+ * Author: Rashmi Pandey
  */
 
 const dashaData = require('../../data/dasha');
 const nakshatras = require('../../data/nakshatras');
 
-/**
- * Calculates complete Vimshottari Dasha Timeline and current active Mahadasha/Antardasha
- * 
- * Input: moonLongitude (0-360), birthDateString (YYYY-MM-DD)
- * Output: Detailed Dasha Object with timeline, current Mahadasha, remaining balance, and Antardashas.
- */
 function calculateVimshottariDasha(moonLongitude, birthDateString) {
     const normLong = ((moonLongitude % 360) + 360) % 360;
     const nakSpan = 13.333333333333334; // 13°20'
-    const nakIndex = Math.floor(normLong / nakSpan);
+    let nakIndex = Math.floor(normLong / nakSpan);
+    if (nakIndex >= 27) nakIndex = 26;
+
     const nakData = nakshatras[nakIndex];
 
     const elapsedInNak = normLong - (nakIndex * nakSpan);
@@ -131,7 +130,15 @@ function calculateVimshottariDasha(moonLongitude, birthDateString) {
         remainingBalanceYears: Number(remainingBalanceYears.toFixed(2)),
         activeMahadasha,
         timeline,
-        antardashas
+        antardashas,
+        calculationSteps: [
+            `Moon Birth Nakshatra: ${nakData.name} (Ruling Graha: ${nakData.lord}, Standard Full Period: ${totalMahadashaYears} Years)`,
+            `Nakshatra Unelapsed Fraction: ${(remainingFraction * 100).toFixed(2)}% remaining at birth`,
+            `Initial Mahadasha Balance Formula: TotalYears × RemainingFraction = ${totalMahadashaYears} × ${remainingFraction.toFixed(4)} = ${remainingBalanceYears.toFixed(2)} Years`,
+            `First Dasha Range: ${birthDateString} to ${timeline[0].endDate}`,
+            `Vimshottari 9-Graha Sequence: Ketu(7y) -> Venus(20y) -> Sun(6y) -> Moon(10y) -> Mars(7y) -> Rahu(18y) -> Jupiter(16y) -> Saturn(19y) -> Mercury(17y)`,
+            `Antardasha Formula: SubYears = (MainLordYears × SubLordYears) ÷ 120 (e.g. ${activeMahadasha.planetName}-${sequence[activeLordIndex].name} = ${((activeLordYears * activeLordYears)/120*12).toFixed(1)} months)`
+        ]
     };
 }
 

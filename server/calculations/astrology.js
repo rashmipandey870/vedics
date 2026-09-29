@@ -1,7 +1,10 @@
 /**
- * Vedic Astrology Rule Engine
+ * RashmiSutra - Vedic Astrology Rule Engine
  * 
- * Maps longitudes to Rashi, Nakshatra, Pada, Paya, and Kundli House placement.
+ * Maps longitudes to Rashi, Nakshatra, Pada, Paya, and Kundli House placements.
+ * Includes explicit calculation breakdown generators for B.Tech Viva presentation.
+ * 
+ * Author: Rashmi Pandey
  */
 
 const rashis = require('../../data/rashis');
@@ -9,15 +12,18 @@ const nakshatras = require('../../data/nakshatras');
 const planetsData = require('../../data/planets');
 
 /**
- * Calculates Rashi index (1-12) and Rashi degree (0-30) from longitude (0-360)
- * Input: longitude in degrees (0-360)
- * Output: { rashiId, name, sanskrit, degree }
+ * Calculates Rashi index (1-12) and degree (0-30) from longitude (0-360)
  */
 function getRashiFromLongitude(longitude) {
     const normLong = ((longitude % 360) + 360) % 360;
-    const rashiId = Math.floor(normLong / 30) + 1;
+    let rashiId = Math.floor(normLong / 30) + 1;
+    if (rashiId > 12) rashiId = 12; // boundary check for 360.0°
+
     const degreeInRashi = normLong % 30;
     const rashiData = rashis[rashiId];
+
+    const degInt = Math.floor(degreeInRashi);
+    const minInt = Math.floor((degreeInRashi % 1) * 60);
 
     return {
         rashiId,
@@ -28,53 +34,77 @@ function getRashiFromLongitude(longitude) {
         element: rashiData.element,
         nature: rashiData.nature,
         degree: Number(degreeInRashi.toFixed(2)),
-        degreeFormatted: `${Math.floor(degreeInRashi)}° ${Math.floor((degreeInRashi % 1) * 60)}'`
+        degreeFormatted: `${degInt}° ${minInt}'`,
+        calculationSteps: [
+            `Sidereal Longitude: ${normLong.toFixed(2)}°`,
+            `Formula: Longitude ÷ 30° = ${normLong.toFixed(2)} ÷ 30 = ${(normLong / 30).toFixed(4)}`,
+            `Rashi Index: Math.floor(${(normLong / 30).toFixed(4)}) + 1 = ${rashiId} -> ${rashiData.name} (${rashiData.sanskrit})`,
+            `Degree within Rashi: ${normLong.toFixed(2)}° % 30° = ${degInt}° ${minInt}'`,
+            `Ruling Graha: ${rashiData.ruler}`
+        ]
     };
 }
 
 /**
- * Calculates Nakshatra details from Moon Longitude
- * Input: moonLongitude (0-360)
- * Output: { nakshatraId, name, sanskrit, lord, deity, pada, degreeFraction }
+ * Calculates Nakshatra & Pada details from Sidereal Moon Longitude
  */
 function getNakshatraFromLongitude(moonLongitude) {
     const normLong = ((moonLongitude % 360) + 360) % 360;
-    const span = 13.333333333333334; // 13°20'
-    const nakshatraIndex = Math.floor(normLong / span);
-    const nakshatraData = nakshatras[nakshatraIndex];
+    const nakSpan = 13.333333333333334; // 13°20' per Nakshatra (800 minutes of arc)
+    const padaSpan = 3.3333333333333335; // 3°20' per Pada (200 minutes of arc)
 
-    const elapsedInNakshatra = normLong - (nakshatraIndex * span);
-    const pada = Math.floor(elapsedInNakshatra / (span / 4)) + 1;
-    const progressPercentage = Number(((elapsedInNakshatra / span) * 100).toFixed(2));
+    let nakIndex = Math.floor(normLong / nakSpan);
+    if (nakIndex >= 27) nakIndex = 26; // boundary guard for 360.0°
+
+    const nakData = nakshatras[nakIndex];
+
+    const elapsedInNak = normLong - (nakIndex * nakSpan);
+    let pada = Math.floor(elapsedInNak / padaSpan) + 1;
+    if (pada > 4) pada = 4; // boundary guard
+
+    const progressPercentage = Number(((elapsedInNak / nakSpan) * 100).toFixed(2));
+    const remainingInNak = nakSpan - elapsedInNak;
+
+    const degInt = Math.floor(elapsedInNak);
+    const minInt = Math.floor((elapsedInNak % 1) * 60);
 
     return {
-        nakshatraId: nakshatraData.id,
-        name: nakshatraData.name,
-        sanskrit: nakshatraData.sanskrit,
-        lord: nakshatraData.lord,
-        lordKey: nakshatraData.lordKey,
-        deity: nakshatraData.deity,
-        symbol: nakshatraData.symbol,
-        element: nakshatraData.element,
-        pada: Math.min(pada, 4),
-        characteristics: nakshatraData.characteristics,
-        elapsedDegrees: Number(elapsedInNakshatra.toFixed(2)),
-        progressPercentage
+        nakshatraId: nakData.id,
+        name: nakData.name,
+        sanskrit: nakData.sanskrit,
+        lord: nakData.lord,
+        lordKey: nakData.lordKey,
+        deity: nakData.deity,
+        symbol: nakData.symbol,
+        element: nakData.element,
+        pada,
+        characteristics: nakData.characteristics,
+        elapsedDegrees: Number(elapsedInNak.toFixed(2)),
+        elapsedFormatted: `${degInt}° ${minInt}'`,
+        progressPercentage,
+        remainingDegrees: Number(remainingInNak.toFixed(2)),
+        calculationSteps: [
+            `Sidereal Moon Longitude: ${normLong.toFixed(2)}°`,
+            `Standard Nakshatra Division: 360° ÷ 27 = 13°20' (13.3333°) per Nakshatra`,
+            `Nakshatra Index Formula: Math.floor(${normLong.toFixed(2)} ÷ 13.3333) = ${nakIndex}`,
+            `Resulting Nakshatra #${nakData.id}: ${nakData.name} (${nakData.sanskrit})`,
+            `Elapsed Angle in Nakshatra: ${normLong.toFixed(2)}° - (${nakIndex} × 13.3333°) = ${degInt}° ${minInt}'`,
+            `Pada Division (3°20' = 3.3333° per Pada): Math.floor(${elapsedInNak.toFixed(2)} ÷ 3.3333) + 1 = Pada ${pada}`,
+            `Nakshatra Lord (Ruling Graha): ${nakData.lord} (Total Mahadasha: ${nakData.dashaYears} Years)`,
+            `Remaining Fraction in Nakshatra: (${remainingInNak.toFixed(2)}° ÷ 13.3333°) = ${(100 - progressPercentage).toFixed(2)}%`
+        ]
     };
 }
 
 /**
  * Calculates Traditional Paya (Foundational Metal)
- * Rule based on Moon House relative to Lagna:
- * - 1st, 6th, 11th House -> Gold (Suvarna)
- * - 2nd, 5th, 9th House  -> Silver (Rajat)
- * - 3rd, 7th, 10th House -> Copper (Tamra)
- * - 4th, 8th, 12th House -> Iron (Loha)
- * 
- * Input: moonHouse (1-12)
- * Output: { name, symbol, traditionalMeaning, calculationBasis }
+ * Rule based on Moon House position relative to Lagna:
+ * - House 1, 6, 11 -> Gold (Suvarna Paya)
+ * - House 2, 5, 9  -> Silver (Rajat Paya)
+ * - House 3, 7, 10 -> Copper (Tamra Paya)
+ * - House 4, 8, 12 -> Iron (Loha Paya)
  */
-function calculatePaya(moonHouse) {
+function calculatePaya(moonHouse, lagnaRashiName, moonRashiName) {
     let payaType = "";
     let symbol = "";
     let meaning = "";
@@ -101,14 +131,19 @@ function calculatePaya(moonHouse) {
         name: payaType,
         symbol,
         traditionalMeaning: meaning,
-        calculationBasis: `Calculated from Moon residing in House ${moonHouse} relative to Lagna.`
+        calculationBasis: `Moon residing in House ${moonHouse} relative to Lagna (Ascendant).`,
+        calculationSteps: [
+            `Lagna (Ascendant) Rashi: ${lagnaRashiName}`,
+            `Moon Rashi (Janma Rashi): ${moonRashiName}`,
+            `Moon House Position Relative to Lagna: House ${moonHouse}`,
+            `Rule Classification: House 1,6,11 = Gold | House 2,5,9 = Silver | House 3,7,10 = Copper | House 4,8,12 = Iron`,
+            `Evaluated Result: Moon in House ${moonHouse} -> ${payaType}`
+        ]
     };
 }
 
 /**
- * Maps all 9 planets to their Rashi, House, Degree, and Sign name
- * Input: planetaryPositions object, lagnaRashiId
- * Output: Array of planet position objects
+ * Maps all 9 planets to their Rashi, House, Degree, Sign name, and Significations
  */
 function getPlanetaryPositionsTable(positions, lagnaRashiId) {
     const planetKeys = ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu"];

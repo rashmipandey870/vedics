@@ -1,7 +1,7 @@
 {
-  "name": "jyotishsetu",
+  "name": "rashmisutra",
   "version": "1.0.0",
-  "description": "Vedic Astrology & Numerology Calculator - College Full Stack Project",
+  "description": "RashmiSutra - Vedic Astrology & Numerology Calculator | Built by Rashmi Pandey",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
@@ -9,6 +9,7 @@
     "dev": "node --watch server.js"
   },
   "keywords": [
+    "rashmisutra",
     "vedic-astrology",
     "numerology",
     "kundli",
@@ -19,7 +20,7 @@
     "nodejs",
     "mongodb"
   ],
-  "author": "B.Tech Computer Science Student",
+  "author": "Rashmi Pandey",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",

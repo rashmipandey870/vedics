@@ -1,5 +1,6 @@
 /**
- * JyotishSetu - Main Dashboard Page Logic
+ * RashmiSutra - Dashboard Page Controller
+ * Author: Rashmi Pandey
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = JSON.parse(savedData);
         loadFullProfile(formData);
     } else {
-        // Default demo load if visited directly
+        // Default demo profile load
         const demoData = {
             name: "Rahul Sharma",
             dob: "2004-08-15",
@@ -22,23 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         loadFullProfile(demoData);
     }
-
-    // Attach Event Listener for Save Profile Button
-    const saveBtn = document.getElementById('saveProfileBtn');
-    if (saveBtn) {
-        saveBtn.addEventListener('click', saveCurrentProfile);
-    }
-
-    // Attach Event Listener for Print Button
-    const printBtn = document.getElementById('printProfileBtn');
-    if (printBtn) {
-        printBtn.addEventListener('click', () => {
-            window.print();
-        });
-    }
 });
 
-let currentProfileData = null; // Store fetched result globally for save action
+let currentProfileData = null;
 
 async function loadFullProfile(formData) {
     const loadingBanner = document.getElementById('dashboard-loading');
@@ -58,7 +45,7 @@ async function loadFullProfile(formData) {
 
         if (data.success) {
             currentProfileData = data;
-            renderUserBanner(data.userMeta);
+            renderUserBanner(data.userMeta, data.methodologyMeta);
             renderCoreCards(data.coreProfile);
             renderPlanetaryTable(data.planetaryPositions);
             renderKundliSVG(data.kundliChart, 'kundli-chart-container');
@@ -78,7 +65,7 @@ async function loadFullProfile(formData) {
     }
 }
 
-function renderUserBanner(meta) {
+function renderUserBanner(meta, methodology) {
     const el = document.getElementById('user-banner-container');
     if (!el) return;
 
@@ -86,22 +73,24 @@ function renderUserBanner(meta) {
         <div class="user-profile-banner">
             <div class="user-banner-info">
                 <h2>Vedic Birth Profile for <span class="gold-text">${meta.name}</span></h2>
-                <div class="user-meta-chips">
+                <div class="user-meta-chips" style="margin-bottom: 0.5rem;">
                     <span class="meta-chip">📅 Date: ${meta.dob}</span>
                     <span class="meta-chip">⏰ Time: ${meta.birthTime}</span>
                     <span class="meta-chip">📍 Place: ${meta.birthPlace}</span>
                     <span class="meta-chip">🌐 Coordinates: ${meta.latitude}°, ${meta.longitude}°</span>
                 </div>
+                <div class="user-meta-chips">
+                    <span class="meta-chip" style="color: var(--gold-light);">Zodiac: ${methodology.zodiac}</span>
+                    <span class="meta-chip" style="color: var(--gold-light);">Ayanamsha: ${methodology.ayanamsha}</span>
+                    <span class="meta-chip" style="color: var(--gold-light);">Dasha: ${methodology.dashaSystem}</span>
+                </div>
             </div>
-            <div class="no-print" style="display: flex; gap: 0.75rem;">
-                <button id="saveProfileBtn" class="btn btn-secondary btn-sm">💾 Save Report</button>
-                <button id="printProfileBtn" class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print / Download Report</button>
+            <div class="no-print" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <button id="saveProfileBtn" class="btn btn-secondary btn-sm" onclick="saveCurrentProfile()">💾 Save Report</button>
+                <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print / Download Report</button>
             </div>
         </div>
     `;
-
-    // Re-attach save event after dynamic render
-    document.getElementById('saveProfileBtn').addEventListener('click', saveCurrentProfile);
 }
 
 function renderCoreCards(core) {
@@ -115,7 +104,12 @@ function renderCoreCards(core) {
             <span class="card-label">Rashi (Moon Sign)</span>
             <div class="card-value">${core.rashi.name}</div>
             <div class="card-subtext">${core.rashi.sanskrit} | Ruled by ${core.rashi.ruler}</div>
-            <button class="card-expand-toggle">Learn more ▼</button>
+            
+            <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+                <button class="card-expand-toggle">Learn more ▼</button>
+                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick='showCalculationStepsModal("Rashi Calculation", ${JSON.stringify(core.rashi.calculationSteps)})'>🧮 View Math</button>
+            </div>
+            
             <div class="card-expandable-content">
                 <p><strong>Element:</strong> ${core.rashi.element}</p>
                 <p><strong>Degree:</strong> ${core.rashi.degree}</p>
@@ -128,8 +122,13 @@ function renderCoreCards(core) {
             <span class="card-header-icon">✨</span>
             <span class="card-label">Nakshatra</span>
             <div class="card-value">${core.nakshatra.name}</div>
-            <div class="card-subtext">${core.nakshatra.sanskrit} | Deity: ${core.nakshatra.deity}</div>
-            <button class="card-expand-toggle">Learn more ▼</button>
+            <div class="card-subtext">${core.nakshatra.sanskrit} | Deity: ${core.nakshatra.deity.split(' ')[0]}</div>
+            
+            <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+                <button class="card-expand-toggle">Learn more ▼</button>
+                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick='showCalculationStepsModal("Nakshatra Calculation", ${JSON.stringify(core.nakshatra.calculationSteps)})'>🧮 View Math</button>
+            </div>
+            
             <div class="card-expandable-content">
                 <p><strong>Nakshatra Lord:</strong> ${core.nakshatra.lord}</p>
                 <p><strong>Symbol:</strong> ${core.nakshatra.symbol}</p>
@@ -141,11 +140,16 @@ function renderCoreCards(core) {
         <div class="profile-card">
             <span class="card-header-icon">🧩</span>
             <span class="card-label">Pada (Quarter)</span>
-            <div class="card-value">Pada ${core.pada}</div>
-            <div class="card-subtext">Quarter ${core.pada} of ${core.nakshatra.name}</div>
-            <button class="card-expand-toggle">Learn more ▼</button>
+            <div class="card-value">Pada ${core.pada.number}</div>
+            <div class="card-subtext">Quarter ${core.pada.number} (${core.pada.elapsedFormatted} in Nakshatra)</div>
+            
+            <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+                <button class="card-expand-toggle">Learn more ▼</button>
+                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick='showCalculationStepsModal("Pada Calculation", ${JSON.stringify(core.pada.calculationSteps)})'>🧮 View Math</button>
+            </div>
+
             <div class="card-expandable-content">
-                <p>Each Nakshatra is divided into 4 Padas of 3°20' each. Pada ${core.pada} refines micro-level psychological and navigational traits.</p>
+                <p>Each Nakshatra is divided into 4 Padas of 3°20' (3.3333°) each. Pada ${core.pada.number} refines micro-level psychological and navigational traits.</p>
             </div>
         </div>
 
@@ -153,11 +157,16 @@ function renderCoreCards(core) {
         <div class="profile-card">
             <span class="card-header-icon">👑</span>
             <span class="card-label">Nakshatra Lord</span>
-            <div class="card-value">${core.nakshatraLord}</div>
+            <div class="card-value">${core.nakshatraLord.name}</div>
             <div class="card-subtext">Governing Graha of Birth Nakshatra</div>
-            <button class="card-expand-toggle">Learn more ▼</button>
+            
+            <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+                <button class="card-expand-toggle">Learn more ▼</button>
+                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick='showCalculationStepsModal("Nakshatra Lord Mapping", ${JSON.stringify(core.nakshatraLord.calculationSteps)})'>🧮 View Math</button>
+            </div>
+
             <div class="card-expandable-content">
-                <p>${core.nakshatraLord} dictates your starting Vimshottari Mahadasha at birth and foundational life themes.</p>
+                <p>${core.nakshatraLord.name} dictates your starting Vimshottari Mahadasha at birth and foundational life themes.</p>
             </div>
         </div>
 
@@ -167,7 +176,12 @@ function renderCoreCards(core) {
             <span class="card-label">Paya (Foundation)</span>
             <div class="card-value">${core.paya.symbol.split(' ')[0]} ${core.paya.name.split(' ')[0]}</div>
             <div class="card-subtext">${core.paya.name}</div>
-            <button class="card-expand-toggle">Learn more ▼</button>
+            
+            <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+                <button class="card-expand-toggle">Learn more ▼</button>
+                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick='showCalculationStepsModal("Paya Metal Rule", ${JSON.stringify(core.paya.calculationSteps)})'>🧮 View Math</button>
+            </div>
+
             <div class="card-expandable-content">
                 <p>${core.paya.traditionalMeaning}</p>
                 <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">Basis: ${core.paya.calculationBasis}</p>
@@ -180,7 +194,12 @@ function renderCoreCards(core) {
             <span class="card-label">Lagna (Ascendant)</span>
             <div class="card-value">${core.lagna.name}</div>
             <div class="card-subtext">${core.lagna.sanskrit} (${core.lagna.degree})</div>
-            <button class="card-expand-toggle">Learn more ▼</button>
+            
+            <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+                <button class="card-expand-toggle">Learn more ▼</button>
+                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick='showCalculationStepsModal("Lagna Calculation", ${JSON.stringify(core.lagna.calculationSteps)})'>🧮 View Math</button>
+            </div>
+
             <div class="card-expandable-content">
                 <p>The eastern horizon sign rising at birth. Establishes the 1st House of your Kundli grid.</p>
             </div>
@@ -192,7 +211,7 @@ function renderCoreCards(core) {
             <span class="card-label">Sun Sign (Surya Rashi)</span>
             <div class="card-value">${core.sunSign.name}</div>
             <div class="card-subtext">${core.sunSign.sanskrit} (${core.sunSign.degree})</div>
-            <button class="card-expand-toggle">Learn more ▼</button>
+            <button class="card-expand-toggle" style="margin-top: auto;">Learn more ▼</button>
             <div class="card-expandable-content">
                 <p>Represents soul purpose, core vitality, and self-realization trajectory.</p>
             </div>
@@ -204,7 +223,7 @@ function renderCoreCards(core) {
             <span class="card-label">Moon Sign (Janma Rashi)</span>
             <div class="card-value">${core.moonSign.name}</div>
             <div class="card-subtext">${core.moonSign.sanskrit} (${core.moonSign.degree})</div>
-            <button class="card-expand-toggle">Learn more ▼</button>
+            <button class="card-expand-toggle" style="margin-top: auto;">Learn more ▼</button>
             <div class="card-expandable-content">
                 <p>Represents emotional mind (Manas), intuition, memory, and instinctual nature.</p>
             </div>
@@ -241,22 +260,25 @@ function renderNumerologySummary(num) {
         <div class="glass-card text-center">
             <div class="num-card-badge">${num.mulank}</div>
             <h3>Mulank (Birth Number)</h3>
-            <p style="font-size: 0.9rem; margin-top: 0.3rem;">${num.mulankProfile.title} | Ruled by ${num.mulankProfile.planet}</p>
+            <p style="font-size: 0.9rem; margin: 0.3rem 0 0.85rem 0;">${num.mulankData.profile.title}</p>
+            <button class="btn btn-secondary btn-sm" onclick='showCalculationStepsModal("Mulank Calculation", ${JSON.stringify(num.mulankData.steps)})'>🧮 View Reduction Steps</button>
         </div>
         <div class="glass-card text-center">
             <div class="num-card-badge">${num.bhagyank}</div>
             <h3>Bhagyank (Life Path)</h3>
-            <p style="font-size: 0.9rem; margin-top: 0.3rem;">${num.bhagyankProfile.title} | Ruled by ${num.bhagyankProfile.planet}</p>
+            <p style="font-size: 0.9rem; margin: 0.3rem 0 0.85rem 0;">${num.bhagyankData.profile.title}</p>
+            <button class="btn btn-secondary btn-sm" onclick='showCalculationStepsModal("Bhagyank Calculation", ${JSON.stringify(num.bhagyankData.steps)})'>🧮 View Reduction Steps</button>
         </div>
         <div class="glass-card text-center">
             <div class="num-card-badge">${num.nameNumber}</div>
             <h3>Name Number</h3>
-            <p style="font-size: 0.9rem; margin-top: 0.3rem;">${num.nameNumberProfile.title} | Ruled by ${num.nameNumberProfile.planet}</p>
+            <p style="font-size: 0.9rem; margin: 0.3rem 0 0.85rem 0;">${num.nameNumberData.profile.title}</p>
+            <button class="btn btn-secondary btn-sm" onclick='showCalculationStepsModal("Name Number Calculation", ${JSON.stringify(num.nameNumberData.steps)})'>🧮 View Letter Mapping</button>
         </div>
     `;
 }
 
-async function saveCurrentProfile() {
+window.saveCurrentProfile = async function() {
     if (!currentProfileData) return;
 
     const payload = {
@@ -269,7 +291,7 @@ async function saveCurrentProfile() {
         longitude: currentProfileData.userMeta.longitude,
         rashi: currentProfileData.coreProfile.rashi.name,
         nakshatra: currentProfileData.coreProfile.nakshatra.name,
-        pada: currentProfileData.coreProfile.pada,
+        pada: currentProfileData.coreProfile.pada.number,
         paya: currentProfileData.coreProfile.paya.name,
         lagna: currentProfileData.coreProfile.lagna.name,
         numerology: {
@@ -294,4 +316,4 @@ async function saveCurrentProfile() {
     } catch (err) {
         alert("Failed to connect to database API.");
     }
-}
+};

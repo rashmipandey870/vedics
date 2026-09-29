@@ -1,5 +1,6 @@
 /**
- * Controller for Astrological & Numerological Calculations
+ * RashmiSutra - Controller for Astrological & Numerological Calculations
+ * Author: Rashmi Pandey
  */
 
 const { calculatePlanetaryPositions } = require('../calculations/astronomy');
@@ -30,7 +31,7 @@ exports.calculateFullProfile = (req, res) => {
         const lat = parseFloat(latitude) || 28.6139; // Default New Delhi latitude
         const lng = parseFloat(longitude) || 77.2090; // Default New Delhi longitude
 
-        // 1. Calculate Astronomical Positions
+        // 1. Calculate Sidereal Astronomical Positions
         const astroPositions = calculatePlanetaryPositions(dob, birthTime, lat, lng);
 
         // 2. Lagna (Ascendant) details
@@ -43,7 +44,7 @@ exports.calculateFullProfile = (req, res) => {
 
         // 4. Moon House placement & Paya calculation
         const moonHouse = ((moonRashi.rashiId - lagnaRashi.rashiId + 12) % 12) + 1;
-        const payaInfo = calculatePaya(moonHouse);
+        const payaInfo = calculatePaya(moonHouse, lagnaRashi.name, moonRashi.name);
 
         // 5. Planetary Positions Table
         const planetaryTable = getPlanetaryPositionsTable(astroPositions, lagnaRashi.rashiId);
@@ -57,7 +58,23 @@ exports.calculateFullProfile = (req, res) => {
         const bhagyankRes = calculateBhagyank(dob);
         const nameNumRes = calculateNameNumber(name, 'chaldean');
 
-        // Build Response
+        // House Signification Names in Traditional Vedic Astrology (Bhavas)
+        const houseBhavaNames = [
+            "1st House (Tanu Bhava) - Self, Physical Body, Personality",
+            "2nd House (Dhana Bhava) - Wealth, Family, Speech",
+            "3rd House (Sahaja Bhava) - Courage, Siblings, Communication",
+            "4th House (Matru Bhava) - Mother, Home, Vehicles, Comforts",
+            "5th House (Putra Bhava) - Children, Intellect, Speculation",
+            "6th House (Shatru Bhava) - Health, Enemies, Daily Service",
+            "7th House (Kalatra Bhava) - Spouse, Partnerships, Trade",
+            "8th House (Randhra Bhava) - Longevity, Transformation, Occult",
+            "9th House (Bhagya Bhava) - Luck, Higher Wisdom, Guru, Dharma",
+            "10th House (Karma Bhava) - Career, Profession, Public Honor",
+            "11th House (Labha Bhava) - Gains, Ambition, Social Network",
+            "12th House (Vyaya Bhava) - Expenses, Moksha, Foreign Lands"
+        ];
+
+        // Build Full Response
         const result = {
             success: true,
             userMeta: {
@@ -69,6 +86,12 @@ exports.calculateFullProfile = (req, res) => {
                 latitude: lat,
                 longitude: lng
             },
+            methodologyMeta: {
+                zodiac: "Sidereal (Nirayana)",
+                ayanamsha: `Lahiri (Chitrapaksha) - ${astroPositions.ayanamsha}°`,
+                dashaSystem: "Vimshottari (120 Years)",
+                numerologySystem: "Chaldean Letter Reduction"
+            },
             coreProfile: {
                 rashi: {
                     name: moonRashi.name,
@@ -77,7 +100,8 @@ exports.calculateFullProfile = (req, res) => {
                     ruler: moonRashi.ruler,
                     element: moonRashi.element,
                     degree: moonRashi.degreeFormatted,
-                    description: moonRashi.name + " (" + moonRashi.sanskrit + ") is governed by " + moonRashi.ruler + "."
+                    description: moonRashi.name + " (" + moonRashi.sanskrit + ") is governed by " + moonRashi.ruler + ".",
+                    calculationSteps: moonRashi.calculationSteps
                 },
                 nakshatra: {
                     name: nakshatraInfo.name,
@@ -85,16 +109,40 @@ exports.calculateFullProfile = (req, res) => {
                     lord: nakshatraInfo.lord,
                     deity: nakshatraInfo.deity,
                     symbol: nakshatraInfo.symbol,
-                    characteristics: nakshatraInfo.characteristics
+                    characteristics: nakshatraInfo.characteristics,
+                    calculationSteps: nakshatraInfo.calculationSteps
                 },
-                pada: nakshatraInfo.pada,
-                nakshatraLord: nakshatraInfo.lord,
+                pada: {
+                    number: nakshatraInfo.pada,
+                    elapsedFormatted: nakshatraInfo.elapsedFormatted,
+                    calculationSteps: [
+                        `Nakshatra: ${nakshatraInfo.name}`,
+                        `Elapsed Angle in Nakshatra: ${nakshatraInfo.elapsedFormatted}`,
+                        `Formula: Math.floor(ElapsedAngle ÷ 3°20') + 1`,
+                        `Evaluated Pada: Pada ${nakshatraInfo.pada}`
+                    ]
+                },
+                nakshatraLord: {
+                    name: nakshatraInfo.lord,
+                    dashaYears: nakshatras.find(n => n.name === nakshatraInfo.name)?.dashaYears || 7,
+                    calculationSteps: [
+                        `Birth Nakshatra: ${nakshatraInfo.name}`,
+                        `Vimshottari Nakshatra-Lord Map: ${nakshatraInfo.name} -> ${nakshatraInfo.lord}`,
+                        `Mahadasha Period: ${nakshatraInfo.lord} governs a standard ${nakshatras.find(n => n.name === nakshatraInfo.name)?.dashaYears || 7}-Year Mahadasha`
+                    ]
+                },
                 paya: payaInfo,
                 lagna: {
                     name: lagnaRashi.name,
                     sanskrit: lagnaRashi.sanskrit,
                     degree: lagnaRashi.degreeFormatted,
-                    ruler: lagnaRashi.ruler
+                    ruler: lagnaRashi.ruler,
+                    calculationSteps: [
+                        `Local Sidereal Time (LST): ${astroPositions.lst}°`,
+                        `Ascendant (Lagna) Formula: tan(Asc) = cos(LST) / (-sin(ε)*tan(lat) - cos(ε)*sin(LST))`,
+                        `Sidereal Lagna Longitude: ${astroPositions.lagna}°`,
+                        `Rashi Mapping: ${lagnaRashi.name} (${lagnaRashi.sanskrit}) at ${lagnaRashi.degreeFormatted}`
+                    ]
                 },
                 sunSign: {
                     name: sunRashi.name,
@@ -108,6 +156,7 @@ exports.calculateFullProfile = (req, res) => {
                 }
             },
             planetaryPositions: planetaryTable,
+            astronomySteps: astroPositions.calculationSteps,
             kundliChart: {
                 lagnaRashiId: lagnaRashi.rashiId,
                 lagnaRashiName: lagnaRashi.name,
@@ -117,9 +166,17 @@ exports.calculateFullProfile = (req, res) => {
                     const planetsInHouse = planetaryTable.filter(p => p.house === houseNum);
                     return {
                         house: houseNum,
+                        bhavaName: houseBhavaNames[i],
                         rashiId: rashiIdForHouse,
                         rashiName: rashis[rashiIdForHouse].name,
-                        planets: planetsInHouse.map(p => p.symbol + " " + p.planet)
+                        rashiSanskrit: rashis[rashiIdForHouse].sanskrit,
+                        rashiRuler: rashis[rashiIdForHouse].ruler,
+                        planets: planetsInHouse.map(p => ({
+                            symbol: p.symbol,
+                            name: p.planet,
+                            sanskrit: p.sanskrit,
+                            degree: p.degree
+                        }))
                     };
                 })
             },
@@ -128,9 +185,9 @@ exports.calculateFullProfile = (req, res) => {
                 mulank: mulankRes.mulank,
                 bhagyank: bhagyankRes.bhagyank,
                 nameNumber: nameNumRes.nameNumber,
-                mulankProfile: mulankRes.profile,
-                bhagyankProfile: bhagyankRes.profile,
-                nameNumberProfile: nameNumRes.profile
+                mulankData: mulankRes,
+                bhagyankData: bhagyankRes,
+                nameNumberData: nameNumRes
             }
         };
 

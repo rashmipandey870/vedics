@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculation Methodology - RashmiSutra</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <canvas id="star-canvas"></canvas>
+
+    <!-- Header / Navbar -->
+    <header class="site-header">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="brand-logo">
+                    <span class="brand-icon">🌌</span>
+                    <div>
+                        <span class="brand-name">RashmiSutra</span>
+                        <span class="brand-tagline">Vedic Astrology • Numerology • Dasha</span>
+                    </div>
+                </a>
+
+                <button class="mobile-menu-btn" aria-label="Toggle Navigation">☰</button>
+
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="profile.html" class="nav-link">Cosmic Profile</a></li>
+                    <li><a href="numerology.html" class="nav-link">Numerology</a></li>
+                    <li><a href="learn.html" class="nav-link">Learn Vedic</a></li>
+                    <li><a href="methodology.html" class="nav-link active">Methodology</a></li>
+                    <li><a href="history.html" class="nav-link">Saved Profiles</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 2.5rem; padding-bottom: 4rem;">
+        
+        <!-- Header -->
+        <div class="section-header">
+            <h1 class="hero-title">Calculation <span class="gold-text">Methodology</span></h1>
+            <p class="section-subtitle">Structured software implementation of traditional Vedic calculation principles</p>
+        </div>
+
+        <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem;">
+            
+            <!-- Brand & Concept Card -->
+            <div class="glass-card">
+                <h3 style="color: var(--gold-light); margin-bottom: 0.5rem;">About RashmiSutra</h3>
+                <p style="margin-bottom: 1rem;">
+                    <strong>RashmiSutra</strong> represents the union of traditional calculation principles (<em>Sutra</em>) structured through modern computational code. Designed as a college-level computer science software project by <strong>Rashmi Pandey</strong>.
+                </p>
+                <div style="background: rgba(255,255,255,0.03); border-left: 3px solid var(--gold-primary); padding: 0.85rem 1rem; border-radius: 4px; font-size: 0.9rem;">
+                    <strong>Rashmi</strong> = Ray of light / Identity<br>
+                    <strong>Sutra</strong> = Structured principle or calculation rule<br>
+                    <strong>RashmiSutra</strong> = Traditional calculation rules implemented through modern software
+                </div>
+            </div>
+
+            <!-- Astrological Methodology Card -->
+            <div class="glass-card">
+                <h3 style="color: var(--gold-light); margin-bottom: 0.75rem;">1. Astrological Methodology</h3>
+                
+                <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.93rem;">
+                    <div>
+                        <strong style="color: var(--text-primary);">Zodiac System:</strong>
+                        <p style="color: var(--text-secondary);">Nirayana (Sidereal) Zodiac. Unlike Tropical systems which align with the Vernal Equinox, Nirayana measures longitudes relative to fixed stellar constellations.</p>
+                    </div>
+
+                    <div>
+                        <strong style="color: var(--text-primary);">Ayanamsha Standard:</strong>
+                        <p style="color: var(--text-secondary);">Lahiri (Chitrapaksha) Ayanamsha. Calculated using formula: <code>Ayanamsha = 23.85° + (Year - 1950) × 0.01361°</code> (approx. 24.23° for year 2026).</p>
+                    </div>
+
+                    <div>
+                        <strong style="color: var(--text-primary);">Nakshatra & Pada Division:</strong>
+                        <p style="color: var(--text-secondary);">360° ecliptic belt ÷ 27 Nakshatras = 13°20' (13.3333°) per Nakshatra. Each Nakshatra is divided into 4 Padas of 3°20' (3.3333°) each, mapping to 108 Navamsha divisions.</p>
+                    </div>
+
+                    <div>
+                        <strong style="color: var(--text-primary);">Vimshottari Dasha Engine:</strong>
+                        <p style="color: var(--text-secondary);">Fixed 120-year cycle across 9 Grahas. Starting Mahadasha Lord is determined by Moon Nakshatra. Unelapsed fraction of Moon Nakshatra determines starting balance at birth.</p>
+                    </div>
+
+                    <div>
+                        <strong style="color: var(--text-primary);">Paya Classification:</strong>
+                        <p style="color: var(--text-secondary);">Traditional footing metal rule based on Moon House relative to Lagna (House 1,6,11 = Gold; House 2,5,9 = Silver; House 3,7,10 = Copper; House 4,8,12 = Iron).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Numerology Methodology Card -->
+            <div class="glass-card">
+                <h3 style="color: var(--gold-light); margin-bottom: 0.75rem;">2. Numerology Methodology</h3>
+                
+                <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.93rem;">
+                    <div>
+                        <strong style="color: var(--text-primary);">Mulank (Birth Day Number):</strong>
+                        <p style="color: var(--text-secondary);">Calculated by extracting day of birth (1–31) and reducing digits iteratively until a single digit (1–9) is obtained.</p>
+                    </div>
+
+                    <div>
+                        <strong style="color: var(--text-primary);">Bhagyank (Life Path Number):</strong>
+                        <p style="color: var(--text-secondary);">Calculated by summing all digits in complete date string (DD + MM + YYYY) and reducing iteratively to a single digit.</p>
+                    </div>
+
+                    <div>
+                        <strong style="color: var(--text-primary);">Name Number Mapping:</strong>
+                        <p style="color: var(--text-secondary);">Chaldean System (A=1, B=2, C=3, D=4, E=5, F=8, G=3, H=5, I=1, J=1, K=2, L=3, M=4, N=5, O=7, P=8, Q=1, R=2, S=3, T=4, U=6, V=6, W=6, X=5, Y=1, Z=7) and Pythagorean System options.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Educational Limitations Statement Card -->
+            <div class="glass-card" style="border-color: rgba(212, 175, 55, 0.5); background: rgba(212, 175, 55, 0.05);">
+                <h3 style="color: var(--gold-light); margin-bottom: 0.5rem;">⚠️ Project Scope & Technical Disclaimer</h3>
+                <p style="font-size: 0.92rem; color: var(--text-primary); line-height: 1.6;">
+                    <strong>RashmiSutra</strong> is an educational software implementation of selected traditional calculation methods. Planetary calculations and derived results may differ from professional ephemeris-based astrology software depending on the calculation engine and simplified orbital approximations used. This application is intended for computer science academic demonstration and informational purposes.
+                </p>
+            </div>
+
+            <!-- Author Card -->
+            <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+                <p>Designed & Developed by <strong>Rashmi Pandey</strong></p>
+                <p>B.Tech Computer Science & Engineering Project</p>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="disclaimer-box">
+                    <strong>Educational Project:</strong> RashmiSutra is built by Rashmi Pandey for B.Tech Computer Science viva presentation.
+                </div>
+                <p class="copyright-text">&copy; 2026 RashmiSutra — Built by Rashmi Pandey.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
