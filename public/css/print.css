@@ -10,7 +10,8 @@
     .no-print,
     .btn,
     .mobile-menu-btn,
-    .modal-overlay {
+    .modal-overlay,
+    #pdf-export-toast {
         display: none !important;
     }
 
@@ -95,3 +96,171 @@
         color: #333 !important;
     }
 }
+
+/* ==========================================================================
+   High-Definition PDF Export Theme Mode (Triggered by exportReportToPDF)
+   ========================================================================== */
+body.pdf-export-mode {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+
+body.pdf-export-mode #dashboard-content,
+body.pdf-export-mode #numerology-results-box {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    padding: 15px !important;
+}
+
+/* Hide non-printable UI controls */
+body.pdf-export-mode header.site-header,
+body.pdf-export-mode footer.site-footer,
+body.pdf-export-mode #star-canvas,
+body.pdf-export-mode .no-print,
+body.pdf-export-mode .btn,
+body.pdf-export-mode button,
+body.pdf-export-mode .mobile-menu-btn,
+body.pdf-export-mode .modal-overlay,
+body.pdf-export-mode .modal-overlay.active,
+body.pdf-export-mode #print-save-modal-overlay,
+body.pdf-export-mode #print-save-modal-overlay.active,
+body.pdf-export-mode #calc-modal-overlay,
+body.pdf-export-mode #pdf-export-toast,
+body.pdf-export-mode .card-expand-toggle {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    z-index: -9999 !important;
+}
+
+/* Force Print Header & Footer Banners */
+body.pdf-export-mode .print-header-banner,
+body.pdf-export-mode .print-footer-banner {
+    display: block !important;
+    color: #0f172a !important;
+    text-align: center;
+}
+
+body.pdf-export-mode .print-header-banner {
+    border-bottom: 2px solid #0f172a;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+
+body.pdf-export-mode .print-header-banner h1 {
+    font-size: 20pt !important;
+    color: #0f172a !important;
+    margin-bottom: 4px;
+    font-weight: bold !important;
+}
+
+/* Typography Overrides */
+body.pdf-export-mode .section-title,
+body.pdf-export-mode .section-subtitle,
+body.pdf-export-mode h1,
+body.pdf-export-mode h2,
+body.pdf-export-mode h3,
+body.pdf-export-mode h4,
+body.pdf-export-mode p,
+body.pdf-export-mode span,
+body.pdf-export-mode div,
+body.pdf-export-mode td,
+body.pdf-export-mode th {
+    color: #0f172a !important;
+    -webkit-text-fill-color: initial !important;
+    text-shadow: none !important;
+}
+
+body.pdf-export-mode .gold-text {
+    color: #1d4ed8 !important;
+    font-weight: bold !important;
+}
+
+body.pdf-export-mode .card-value {
+    color: #1e40af !important;
+    font-size: 1.3rem !important;
+    font-weight: bold !important;
+}
+
+/* Cards & Grid Containers */
+body.pdf-export-mode .glass-card,
+body.pdf-export-mode .profile-card,
+body.pdf-export-mode .user-profile-banner {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+    color: #0f172a !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 1rem !important;
+}
+
+body.pdf-export-mode .profile-card::before {
+    background: #2563eb !important;
+}
+
+body.pdf-export-mode .user-meta-chips .meta-chip {
+    background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #334155 !important;
+}
+
+/* Expandable content visible in PDF */
+body.pdf-export-mode .card-expandable-content {
+    display: block !important;
+    color: #334155 !important;
+    border-top: 1px solid #e2e8f0 !important;
+    margin-top: 0.5rem !important;
+    padding-top: 0.5rem !important;
+}
+
+/* Kundli SVG Chart Styling for PDF */
+body.pdf-export-mode .kundli-svg-container {
+    background: #ffffff !important;
+    border: 2px solid #0f172a !important;
+    box-shadow: none !important;
+}
+
+body.pdf-export-mode .kundli-svg line,
+body.pdf-export-mode .kundli-svg rect,
+body.pdf-export-mode .kundli-svg polygon,
+body.pdf-export-mode .kundli-svg path {
+    stroke: #0f172a !important;
+    stroke-width: 2px !important;
+}
+
+body.pdf-export-mode .kundli-rashi-num {
+    fill: #1d4ed8 !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
+}
+
+body.pdf-export-mode .kundli-planet-tag {
+    fill: #0f172a !important;
+    font-weight: bold !important;
+    font-size: 13px !important;
+}
+
+/* Table Styling for PDF */
+body.pdf-export-mode .custom-table {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    width: 100% !important;
+}
+
+body.pdf-export-mode .custom-table th {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    border-bottom: 2px solid #cbd5e1 !important;
+    font-weight: bold !important;
+    padding: 8px 10px !important;
+}
+
+body.pdf-export-mode .custom-table td {
+    background: #ffffff !important;
+    color: #1e293b !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    padding: 8px 10px !important;
+}
+

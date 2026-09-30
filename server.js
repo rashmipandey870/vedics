@@ -48,6 +48,10 @@ app.get('/history', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'history.html'));
 });
 
+app.get('/presentation', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'presentation.html'));
+});
+
 // Graceful local MongoDB connection setup
 mongoose.connect(MONGO_URI, {
     serverSelectionTimeoutMS: 3000 // 3-second timeout for local DB connection check
@@ -58,11 +62,16 @@ mongoose.connect(MONGO_URI, {
     console.log('ℹ️ JeevanShaili is operating in Session Fallback Mode (Profiles will save in-memory).');
 });
 
-// Start Server
-app.listen(PORT, () => {
-    console.log(`================================================================`);
-    console.log(`🌌 JeevanShaili Server active at http://localhost:${PORT}`);
-    console.log(`📜 Vedic Astrology • Numerology • Dasha Engine`);
-    console.log(`👩‍💻 Built by Rashmi Pandey | B.Tech Computer Science Project`);
-    console.log(`================================================================`);
-});
+// Start Server (when run directly)
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`================================================================`);
+        console.log(`🌌 JeevanShaili Server active at http://localhost:${PORT}`);
+        console.log(`📜 Vedic Astrology • Numerology • Dasha Engine`);
+        console.log(`👩‍💻 Built by Rashmi Pandey | B.Tech Computer Science Project`);
+        console.log(`================================================================`);
+    });
+}
+
+// Export app for Vercel serverless function execution
+module.exports = app;

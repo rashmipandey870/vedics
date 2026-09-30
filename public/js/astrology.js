@@ -219,13 +219,21 @@ window.showCalculationStepsModal = function(title, stepsArray) {
 function attachCardExpandListeners() {
     const buttons = document.querySelectorAll('.card-expand-toggle');
     buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const content = btn.nextElementSibling;
-            if (content) {
-                content.classList.toggle('open');
-                const isOpen = content.classList.contains('open');
-                btn.innerHTML = isOpen ? 'Show less ▲' : 'Learn more ▼';
+        // Prevent duplicate listener registration
+        btn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const card = btn.closest('.profile-card, .glass-card');
+            if (card) {
+                const content = card.querySelector('.card-expandable-content');
+                if (content) {
+                    content.classList.toggle('open');
+                    const isOpen = content.classList.contains('open');
+                    btn.innerHTML = isOpen ? 'Show less ▲' : 'Learn more ▼';
+                }
             }
-        });
+        };
     });
 }
+
+window.attachCardExpandListeners = attachCardExpandListeners;

@@ -60,6 +60,7 @@ async function loadFullProfile(formData) {
 
             renderDashaSection(data.dasha, 'dasha-section-container');
             renderNumerologySummary(data.numerology);
+            renderKundaliAnalysisSection(data);
 
             if (loadingBanner) loadingBanner.style.display = 'none';
             if (contentBox) contentBox.style.display = 'block';
@@ -94,9 +95,10 @@ function renderUserBanner(meta, methodology) {
                     <span class="meta-chip" style="color: var(--gold-light);">Dasha: ${methodology.dashaSystem}</span>
                 </div>
             </div>
-            <div class="no-print" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                <button id="saveProfileBtn" class="btn btn-secondary btn-sm" onclick="saveCurrentProfile()">💾 Save Report</button>
-                <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print / Download Report</button>
+            <div class="no-print" style="display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center;">
+                <button id="saveProfileBtn" class="btn btn-secondary btn-sm" onclick="saveCurrentProfile()">💾 Save to History</button>
+                <button class="btn btn-secondary btn-sm" style="background: rgba(37, 99, 235, 0.2); border-color: #3b82f6; color: #93c5fd;" onclick="exportReportToPDF()">📥 Download PDF</button>
+                <button class="btn btn-primary btn-sm" onclick="openPrintSaveModal()">🖨️ Print / Save Options</button>
             </div>
         </div>
     `;
@@ -476,4 +478,101 @@ function renderYogasSection(yogas, containerId = 'yogas-section-container') {
     `).join('');
 
     container.innerHTML = cardsHTML;
+}
+
+/**
+ * Renders Comprehensive Traditional Vedic Kundali & Personality Analysis Report
+ */
+function renderKundaliAnalysisSection(data) {
+    const container = document.getElementById('kundali-analysis-container');
+    if (!container || !data || !data.coreProfile) return;
+
+    const core = data.coreProfile;
+    const rashi = core.rashi;
+    const nakshatra = core.nakshatra;
+    const lagna = core.lagna;
+    const paya = core.paya;
+    const currentDasha = (data.dasha && data.dasha.currentDasha) ? data.dasha.currentDasha : null;
+    const yogas = data.yogas || [];
+
+    const analysisHTML = `
+        <div class="glass-card" style="margin-bottom: 2rem; border-top: 4px solid var(--gold-primary);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+                <h3 style="color: var(--gold-light); font-size: 1.4rem; margin: 0;">📜 Vedic Kundali Character & Life Analysis Report</h3>
+                <span class="meta-chip" style="color: var(--gold-light);">Parashari Vedic Astrology Engine</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+                
+                <!-- 1. Lagna & Physical Disposition -->
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: var(--radius-sm); padding: 1.25rem;">
+                    <h4 style="color: var(--gold-light); margin-bottom: 0.5rem; font-size: 1.1rem;">🏛️ 1. Lagna (Ascendant) & Physical Disposition</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 0.5rem;">
+                        <strong>Ascendant Sign:</strong> ${lagna.name} (${lagna.sanskrit}) | <strong>Lagna Lord:</strong> ${lagna.ruler}
+                    </p>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+                        Your Lagna dictates your physical body, constitution (Prakriti), stamina, and primary approach to life. Ruled by <strong>${lagna.ruler}</strong>, you possess an inherent drive towards self-reliance, strategic thinking, and independence. The ${lagna.element} element of ${lagna.name} imparts resilience, mental vitality, and strong self-governance.
+                    </p>
+                </div>
+
+                <!-- 2. Janma Rashi & Mental Temperament -->
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: var(--radius-sm); padding: 1.25rem;">
+                    <h4 style="color: var(--gold-light); margin-bottom: 0.5rem; font-size: 1.1rem;">🌙 2. Janma Rashi (Moon Sign) & Subconscious Mind</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 0.5rem;">
+                        <strong>Moon Sign:</strong> ${rashi.name} (${rashi.sanskrit}) | <strong>Rashi Lord:</strong> ${rashi.ruler} | <strong>Element:</strong> ${rashi.element}
+                    </p>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+                        In traditional Parashari astrology, the Janma Rashi governs emotional intelligence, inner peace, and instinctual behavior. With your Moon placed in <strong>${rashi.name}</strong>, your mind thrives on clarity, logical order, and meaningful connections. The planetary ruler <strong>${rashi.ruler}</strong> grants mental endurance and empathetic understanding.
+                    </p>
+                </div>
+
+                <!-- 3. Nakshatra & Deity Archetype -->
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: var(--radius-sm); padding: 1.25rem;">
+                    <h4 style="color: var(--gold-light); margin-bottom: 0.5rem; font-size: 1.1rem;">✨ 3. Birth Nakshatra & Cosmic Archetype</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 0.5rem;">
+                        <strong>Nakshatra:</strong> ${nakshatra.name} (Pada ${core.pada.number}) | <strong>Deity:</strong> ${nakshatra.deity} | <strong>Lord:</strong> ${core.nakshatraLord.name}
+                    </p>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+                        Your birth Nakshatra <strong>${nakshatra.name}</strong> defines your core karmic motivation and innate talents. Presided over by <strong>${nakshatra.deity}</strong>, this lunar constellation confers analytical depth, intuitive wisdom, and high ethical principles. Pada ${core.pada.number} adds micro-level refine to your career focus and emotional stability.
+                    </p>
+                </div>
+
+                <!-- 4. Paya & Foundational Life Basis -->
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: var(--radius-sm); padding: 1.25rem;">
+                    <h4 style="color: var(--gold-light); margin-bottom: 0.5rem; font-size: 1.1rem;">🏛️ 4. Paya (Metal Foundation) & Wealth Stability</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 0.5rem;">
+                        <strong>Paya Foundation:</strong> ${paya.name} (${paya.symbol.split(' ')[0]})
+                    </p>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+                        The traditional Paya rule calculates financial trajectory and family fortune based on Moon placement relative to Lagna at birth. Your chart features <strong>${paya.name}</strong>, indicating steady material accumulation, strong family support, and progressive asset growth through sustained discipline.
+                    </p>
+                </div>
+
+                <!-- 5. Yogas & Special Strengths -->
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: var(--radius-sm); padding: 1.25rem;">
+                    <h4 style="color: var(--gold-light); margin-bottom: 0.5rem; font-size: 1.1rem;">🔮 5. Classical Yogas & Special Strengths</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 0.5rem;">
+                        <strong>Formed Combinations:</strong> ${yogas.length > 0 ? yogas.map(y => y.title).join(', ') : 'Standard Parashari Planetary Aspects'}
+                    </p>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+                        Planetary alignments in your birth chart form special classical Yogas that activate specific blessings during favorable Dasha periods. These combinations grant intellectual acumen, professional respect, and resilience against life obstacles.
+                    </p>
+                </div>
+
+                <!-- 6. Dasha Life Phase & Sattvic Guidance -->
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: var(--radius-sm); padding: 1.25rem;">
+                    <h4 style="color: var(--gold-light); margin-bottom: 0.5rem; font-size: 1.1rem;">⏳ 6. Active Dasha Phase & Remedial Guidance</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 0.5rem;">
+                        <strong>Active Period:</strong> ${currentDasha ? currentDasha.mahadasha + ' Mahadasha / ' + currentDasha.antardasha + ' Antardasha' : 'Vimshottari Timeline Active'}
+                    </p>
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+                        Your current Vimshottari Dasha highlights professional consolidation, skill enhancement, and spiritual growth. Traditional Vedic remedies recommend honoring your Nakshatra Lord <strong>${core.nakshatraLord.name}</strong> through daily meditation, sattvic lifestyle, and selfless service (Dana).
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = analysisHTML;
 }

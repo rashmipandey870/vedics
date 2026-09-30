@@ -56,6 +56,10 @@ function renderNumerologyResults(data) {
         <div style="text-align: center; margin-bottom: 2rem;">
             <h2>Your <span class="gold-text">Numerology Profile</span></h2>
             <p>Calculated using traditional mathematical digit reduction (${nameNumber.system.toUpperCase()} Mapping).</p>
+            <div class="no-print" style="display: flex; justify-content: center; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap;">
+                <button class="btn btn-secondary btn-sm" style="background: rgba(37, 99, 235, 0.2); border-color: #3b82f6; color: #93c5fd;" onclick="exportReportToPDF('numerology-results-box', 'JeevanShaili_Numerology_Report')">📥 Save as PDF</button>
+                <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print Report</button>
+            </div>
         </div>
 
         <div class="numerology-highlights-grid">

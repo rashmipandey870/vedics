@@ -6,7 +6,7 @@
     <title>Your Cosmic Birth Profile - JeevanShaili</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/print.css" media="print">
+    <link rel="stylesheet" href="css/print.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
@@ -134,20 +134,81 @@
             </div>
             <div id="numerology-summary-grid" class="numerology-highlights-grid"></div>
 
+            <!-- Traditional Comprehensive Vedic Kundali & Personality Analysis Section -->
+            <div class="section-header" style="margin-top: 3.5rem;">
+                <h2 class="section-title">Traditional Vedic <span class="gold-text">Kundali & Personality Analysis</span></h2>
+                <p class="section-subtitle">Comprehensive classical Parashari interpretation of Lagna, Moon Sign, Nakshatra, Yogas & Life Dynamics</p>
+            </div>
+            <div id="kundali-analysis-container" style="margin-bottom: 3.5rem;"></div>
+
             <!-- Universal Calculation Breakdown Modal -->
             <div id="calc-modal-overlay" class="modal-overlay">
-                <div class="modal-container">
+                <div class="modal-container" style="max-width: 600px;">
                     <button class="modal-close-btn" onclick="document.getElementById('calc-modal-overlay').classList.remove('active')">✕</button>
                     <div id="calc-modal-body"></div>
                 </div>
             </div>
 
+            <!-- Print & PDF Export Options Modal -->
+            <div id="print-save-modal-overlay" class="modal-overlay">
+                <div class="modal-container" style="max-width: 540px; text-align: center;">
+                    <button class="modal-close-btn" onclick="closePrintSaveModal()">✕</button>
+                    <h2 style="color: var(--gold-light); margin-bottom: 0.5rem;">🖨️ Print & PDF Report Options</h2>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        Choose how you would like to save or export your Cosmic Birth Profile Report:
+                    </p>
+
+                    <div style="display: flex; flex-direction: column; gap: 1rem; text-align: left;">
+                        <!-- Option 1: Direct 300 DPI High-Res PDF Download -->
+                        <div class="glass-card" style="padding: 1.25rem; border-left: 4px solid #2563eb; cursor: pointer; transition: transform 0.2s;" onclick="exportReportToPDF(); closePrintSaveModal();">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="font-size: 2rem;">📥</div>
+                                <div>
+                                    <h4 style="color: #60a5fa; margin: 0 0 0.25rem 0;">Download 300 DPI PDF Report (High-Res Direct)</h4>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Generates a high-contrast, razor-sharp 300 DPI light report .pdf file directly to your device.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Option 2: Browser Vector Print / Save as PDF -->
+                        <div class="glass-card" style="padding: 1.25rem; border-left: 4px solid var(--gold-primary); cursor: pointer; transition: transform 0.2s;" onclick="window.print(); closePrintSaveModal();">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="font-size: 2rem;">🖨️</div>
+                                <div>
+                                    <h4 style="color: var(--gold-light); margin: 0 0 0.25rem 0;">Browser Vector PDF / Print Window</h4>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Opens browser print window. Select <strong>"Save as PDF"</strong> for 100% crisp vector text.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Option 3: Save to History -->
+                        <div class="glass-card" style="padding: 1.25rem; border-left: 4px solid #10b981; cursor: pointer; transition: transform 0.2s;" onclick="saveCurrentProfile(); closePrintSaveModal();">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="font-size: 2rem;">💾</div>
+                                <div>
+                                    <h4 style="color: #34d399; margin: 0 0 0.25rem 0;">Save Profile to App History</h4>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Saves profile records in database memory so you can view it anytime on Saved Profiles.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-secondary" style="margin-top: 1.5rem; width: 100%;" onclick="closePrintSaveModal()">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Print Footer Banner (Only visible during printing/PDF export) -->
+            <div class="print-footer-banner" style="display: none; text-align: center; margin-top: 2rem; border-top: 1px solid #ccc; padding-top: 0.75rem; font-size: 9pt; color: #555;">
+                JeevanShaili Vedic Astrology Report — Calculated using Lahiri Ayanamsha & VSOP87 Ephemeris | Built by Rashmi Pandey
+            </div>
+
             <!-- Bottom Actions -->
-            <div class="no-print" style="text-align: center; margin-top: 3rem; display: flex; justify-content: center; gap: 1.25rem; flex-wrap: wrap;">
-                <a href="index.html" class="btn btn-secondary">✏️ Recalculate with New Details</a>
-                <a href="numerology.html" class="btn btn-secondary">🔢 Explore Full Numerology Suite</a>
-                <a href="methodology.html" class="btn btn-secondary">📖 View Calculation Methodology</a>
-                <button onclick="window.print()" class="btn btn-primary">🖨️ Print / Save PDF Report</button>
+            <div class="no-print" style="text-align: center; margin-top: 3rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <a href="index.html" class="btn btn-secondary">✏️ Recalculate</a>
+                <a href="numerology.html" class="btn btn-secondary">🔢 Numerology Suite</a>
+                <button onclick="saveCurrentProfile()" class="btn btn-secondary">💾 Save to History</button>
+                <button onclick="exportReportToPDF()" class="btn btn-secondary" style="background: rgba(37, 99, 235, 0.2); border-color: #3b82f6; color: #93c5fd;">📥 Save as PDF</button>
+                <button onclick="openPrintSaveModal()" class="btn btn-primary">🖨️ Print / Save Options</button>
             </div>
 
         </div>
@@ -167,6 +228,7 @@
         </div>
     </footer>
 
+    <script src="js/html2pdf.bundle.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/astrology.js"></script>
     <script src="js/dashaUI.js"></script>
