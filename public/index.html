@@ -83,7 +83,8 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label" for="birthPlace">Birth Place City</label>
-                            <input type="text" id="birthPlace" class="form-control" placeholder="e.g. Deoghar, Jharkhand" required>
+                            <input type="text" id="birthPlace" class="form-control" placeholder="e.g. Patna, Ranchi, Jaipur, Mumbai, London" required>
+                            <div id="city-geo-status" style="font-size: 0.82rem; margin-top: 5px; font-weight: 500;"></div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="gender">Gender (Optional)</label>
@@ -114,6 +115,10 @@
                                 <option value="bengaluru">Bengaluru (12.9716°, 77.5946°)</option>
                                 <option value="hyderabad">Hyderabad (17.3850°, 78.4867°)</option>
                                 <option value="varanasi">Varanasi (25.3176°, 82.9739°)</option>
+                                <option value="patna">Patna (25.5941°, 85.1376°)</option>
+                                <option value="ranchi">Ranchi (23.3441°, 85.3096°)</option>
+                                <option value="lucknow">Lucknow (26.8467°, 80.9462°)</option>
+                                <option value="jaipur">Jaipur (26.9124°, 75.7873°)</option>
                                 <option value="london">London (51.5074°, -0.1278°)</option>
                                 <option value="newyork">New York (40.7128°, -74.0060°)</option>
                             </select>
@@ -122,11 +127,11 @@
                         <div class="form-grid">
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label class="form-label" for="latitude">Latitude (°N)</label>
-                                <input type="number" step="any" id="latitude" class="form-control" value="28.6139" required>
+                                <input type="number" step="any" id="latitude" class="form-control" placeholder="e.g. 25.5941" required>
                             </div>
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label class="form-label" for="longitude">Longitude (°E)</label>
-                                <input type="number" step="any" id="longitude" class="form-control" value="77.2090" required>
+                                <input type="number" step="any" id="longitude" class="form-control" placeholder="e.g. 85.1376" required>
                             </div>
                         </div>
                     </div>
@@ -162,6 +167,11 @@
                     <p>Interactive SVG 12-house chart visualization showing house Rashi numbers, placed Grahas, and Bhava details.</p>
                 </div>
                 <div class="glass-card">
+                    <span class="card-header-icon">👑</span>
+                    <h3>Vedic Yogas & Benefits</h3>
+                    <p>Detects Gaja Kesari, Budhaditya, Kendra-Trikona Raja Yogas, and Mahapurusha Yogas with life blessings.</p>
+                </div>
+                <div class="glass-card">
                     <span class="card-header-icon">⏳</span>
                     <h3>Vimshottari Dasha</h3>
                     <p>Generates 120-year planetary timeline with current active Mahadasha and Antardasha breakdown.</p>
@@ -170,11 +180,6 @@
                     <span class="card-header-icon">🔢</span>
                     <h3>Numerology Suite</h3>
                     <p>Calculates Mulank, Bhagyank, and Name Number (Chaldean) with step-by-step mathematical reduction.</p>
-                </div>
-                <div class="glass-card">
-                    <span class="card-header-icon">🖨️</span>
-                    <h3>MongoDB & Print Report</h3>
-                    <p>Saves birth profiles locally to MongoDB and provides a clean print-ready stylesheet for PDF export.</p>
                 </div>
             </div>
         </section>
@@ -196,16 +201,39 @@
 
     <script src="js/main.js"></script>
     <script>
-        document.getElementById('mainBirthForm').addEventListener('submit', (e) => {
+        document.getElementById('mainBirthForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.textContent = "⏳ Resolving Coordinates & Calculating...";
+
+            const birthPlace = document.getElementById('birthPlace').value.trim();
+            let lat = parseFloat(document.getElementById('latitude').value);
+            let lng = parseFloat(document.getElementById('longitude').value);
+
+            // Guaranteed async city resolution if lat/lng are missing or city typed
+            if (birthPlace && window.resolveCityCoordinates) {
+                const resolved = await window.resolveCityCoordinates(birthPlace);
+                if (resolved) {
+                    lat = resolved.lat;
+                    lng = resolved.lng;
+                    document.getElementById('latitude').value = lat;
+                    document.getElementById('longitude').value = lng;
+                }
+            }
+
+            if (isNaN(lat) || isNaN(lng)) {
+                lat = 28.6139; // Fallback New Delhi only if completely unresolvable
+                lng = 77.2090;
+            }
+
             const data = {
                 name: document.getElementById('fullName').value.trim(),
                 dob: document.getElementById('dob').value,
                 birthTime: document.getElementById('birthTime').value,
-                birthPlace: document.getElementById('birthPlace').value.trim(),
+                birthPlace: birthPlace,
                 gender: document.getElementById('gender').value,
-                latitude: parseFloat(document.getElementById('latitude').value),
-                longitude: parseFloat(document.getElementById('longitude').value)
+                latitude: lat,
+                longitude: lng
             };
             sessionStorage.setItem('jyotishsetu_birth_data', JSON.stringify(data));
             window.location.href = 'profile.html';
