@@ -52,15 +52,16 @@ app.get('/presentation', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'presentation.html'));
 });
 
-// Graceful local MongoDB connection setup
-mongoose.connect(MONGO_URI, {
-    serverSelectionTimeoutMS: 3000 // 3-second timeout for local DB connection check
-}).then(() => {
-    console.log('✅ Connected to local MongoDB database at:', MONGO_URI);
-}).catch((err) => {
-    console.log('⚠️ [MongoDB Note] Local MongoDB daemon not detected on localhost:27017.');
-    console.log('ℹ️ JeevanShaili is operating in Session Fallback Mode (Profiles will save in-memory).');
-});
+// Fast non-blocking MongoDB connection setup
+if (process.env.MONGO_URI || !process.env.VERCEL) {
+    mongoose.connect(MONGO_URI, {
+        serverSelectionTimeoutMS: 800 // 800ms fast timeout to avoid blocking serverless requests
+    }).then(() => {
+        console.log('✅ Connected to MongoDB database at:', MONGO_URI);
+    }).catch((err) => {
+        console.log('ℹ️ JeevanShaili operating in Fast In-Memory Fallback Mode.');
+    });
+}
 
 // Start Server (when run directly)
 if (require.main === module) {
