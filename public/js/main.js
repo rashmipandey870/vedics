@@ -347,19 +347,20 @@ async function exportReportToPDF(targetElementId = 'dashboard-content', reportTi
     const fileName = reportTitle ? `${reportTitle}.pdf` : `JeevanShaili_Report_${userName}.pdf`;
 
     const opt = {
-        margin:       [0.3, 0.3, 0.4, 0.3],
+        margin:       [0.3, 0.3, 0.3, 0.3],
         filename:     fileName,
-        image:        { type: 'jpeg', quality: 1.0 },
+        image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { 
-            scale: 3,                  // 300 DPI ultra-high print resolution
+            scale: 2,                  // High resolution print scale
             useCORS: true, 
             logging: false, 
             backgroundColor: '#ffffff',
             letterRendering: true,
-            windowWidth: 1200           // Fixed desktop layout width for clean text alignment
+            scrollY: 0,                // CRITICAL: Prevents 7 blank pages caused by scroll offset!
+            windowWidth: 1000          // Consistent paper layout width
         },
         jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait', compress: true },
-        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+        pagebreak:    { mode: ['css', 'legacy'] }
     };
 
     try {

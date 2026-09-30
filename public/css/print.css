@@ -106,11 +106,20 @@ body.pdf-export-mode {
     font-family: Arial, Helvetica, sans-serif !important;
 }
 
+body.pdf-export-mode .container,
+body.pdf-export-mode main {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
 body.pdf-export-mode #dashboard-content,
 body.pdf-export-mode #numerology-results-box {
     background: #ffffff !important;
     color: #0f172a !important;
-    padding: 15px !important;
+    padding: 10px 15px !important;
+    margin-top: 0 !important;
 }
 
 /* Hide non-printable UI controls */
@@ -144,8 +153,8 @@ body.pdf-export-mode .print-footer-banner {
 
 body.pdf-export-mode .print-header-banner {
     border-bottom: 2px solid #0f172a;
-    padding-bottom: 12px;
-    margin-bottom: 20px;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 body.pdf-export-mode .print-header-banner h1 {
@@ -155,7 +164,7 @@ body.pdf-export-mode .print-header-banner h1 {
     font-weight: bold !important;
 }
 
-/* Typography Overrides */
+/* Typography Overrides (FIXES GOLD GRADIENT TEXT BOX BUG) */
 body.pdf-export-mode .section-title,
 body.pdf-export-mode .section-subtitle,
 body.pdf-export-mode h1,
@@ -169,24 +178,48 @@ body.pdf-export-mode td,
 body.pdf-export-mode th {
     color: #0f172a !important;
     -webkit-text-fill-color: initial !important;
+    -webkit-background-clip: initial !important;
+    background: none !important;
     text-shadow: none !important;
 }
 
 body.pdf-export-mode .gold-text {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    -webkit-text-fill-color: initial !important;
     color: #1d4ed8 !important;
     font-weight: bold !important;
 }
 
 body.pdf-export-mode .card-value {
     color: #1e40af !important;
-    font-size: 1.3rem !important;
+    font-size: 1.25rem !important;
     font-weight: bold !important;
 }
 
-/* Cards & Grid Containers */
-body.pdf-export-mode .glass-card,
-body.pdf-export-mode .profile-card,
-body.pdf-export-mode .user-profile-banner {
+/* Convert Grid to Flex for Accurate Height Measurement */
+body.pdf-export-mode .core-profile-grid,
+body.pdf-export-mode .numerology-highlights-grid {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    margin-bottom: 1.5rem !important;
+}
+
+body.pdf-export-mode .profile-card {
+    width: 48% !important;
+    min-width: 260px !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+    color: #0f172a !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    padding: 1rem !important;
+}
+
+body.pdf-export-mode .glass-card {
     background: #ffffff !important;
     border: 1px solid #cbd5e1 !important;
     box-shadow: none !important;
@@ -194,14 +227,23 @@ body.pdf-export-mode .user-profile-banner {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
     margin-bottom: 1rem !important;
+    padding: 1.25rem !important;
 }
 
 body.pdf-export-mode .profile-card::before {
     background: #2563eb !important;
 }
 
-body.pdf-export-mode .user-meta-chips .meta-chip {
+body.pdf-export-mode .user-profile-banner {
     background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    padding: 1.25rem !important;
+    margin-bottom: 1.5rem !important;
+    page-break-inside: avoid !important;
+}
+
+body.pdf-export-mode .user-meta-chips .meta-chip {
+    background: #ffffff !important;
     border: 1px solid #cbd5e1 !important;
     color: #334155 !important;
 }
@@ -216,7 +258,16 @@ body.pdf-export-mode .card-expandable-content {
 }
 
 /* Kundli SVG Chart Styling for PDF */
+body.pdf-export-mode .kundli-chart-wrapper {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 1rem 0 !important;
+}
+
 body.pdf-export-mode .kundli-svg-container {
+    width: 380px !important;
+    height: 380px !important;
     background: #ffffff !important;
     border: 2px solid #0f172a !important;
     box-shadow: none !important;
