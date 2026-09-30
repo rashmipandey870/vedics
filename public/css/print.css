@@ -1,6 +1,11 @@
 /* ==========================================================================
-   JeevanShaili - Print Stylesheet for Birth Profile Reports
+   JeevanShaili - High-Quality A4 Vector Print & PDF Stylesheet
    ========================================================================== */
+
+@page {
+    size: A4 portrait;
+    margin: 10mm 12mm;
+}
 
 @media print {
     /* Hide non-printable elements */
@@ -9,309 +14,235 @@
     #star-canvas,
     .no-print,
     .btn,
+    button,
     .mobile-menu-btn,
     .modal-overlay,
-    #pdf-export-toast {
+    #pdf-export-toast,
+    .card-expand-toggle {
         display: none !important;
     }
 
     body {
         background: #ffffff !important;
-        color: #1a1a1a !important;
-        font-family: Arial, sans-serif !important;
-        font-size: 11pt !important;
+        color: #0f172a !important;
+        font-family: 'Segoe UI', Arial, sans-serif !important;
+        font-size: 9.5pt !important;
+        line-height: 1.4 !important;
     }
 
-    .container {
+    .container, main {
         width: 100% !important;
         max-width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
     }
 
-    /* Print Header */
+    #dashboard-content, #numerology-results-box {
+        display: block !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Print Header & Footer Banners */
     .print-header-banner {
         display: block !important;
         text-align: center;
-        border-bottom: 2px solid #000;
-        padding-bottom: 15px;
-        margin-bottom: 25px;
+        border-bottom: 2px solid #0f172a;
+        padding-bottom: 8px;
+        margin-bottom: 12px;
     }
 
     .print-header-banner h1 {
-        font-size: 22pt !important;
-        color: #000 !important;
-        margin-bottom: 5px;
+        font-size: 18pt !important;
+        color: #0f172a !important;
+        margin-bottom: 2px;
+        font-weight: bold !important;
     }
 
-    /* Adjust Cards & Grid for Paper */
-    .glass-card, .profile-card {
-        background: #fff !important;
-        border: 1px solid #ccc !important;
-        box-shadow: none !important;
-        color: #000 !important;
-        page-break-inside: avoid;
+    .print-footer-banner {
+        display: block !important;
+        text-align: center;
+        border-top: 1px solid #cbd5e1;
+        padding-top: 6px;
+        margin-top: 15px;
+        font-size: 8pt !important;
+        color: #64748b !important;
     }
 
-    .card-value, h1, h2, h3, h4 {
-        color: #000 !important;
+    /* Typography & Gold Text Override */
+    .section-header {
+        margin-top: 1.5rem !important;
+        margin-bottom: 1rem !important;
+        page-break-after: avoid !important;
+    }
+
+    .section-title {
+        font-size: 14pt !important;
+        color: #0f172a !important;
+        margin-bottom: 2px !important;
+        font-weight: bold !important;
+    }
+
+    .section-subtitle {
+        font-size: 8.5pt !important;
+        color: #475569 !important;
+    }
+
+    .gold-text {
+        background: none !important;
+        -webkit-background-clip: initial !important;
         -webkit-text-fill-color: initial !important;
+        color: #1d4ed8 !important;
+        font-weight: bold !important;
     }
 
-    .custom-table {
-        border: 1px solid #333 !important;
+    .card-value {
+        color: #1e40af !important;
+        font-size: 12pt !important;
+        font-weight: bold !important;
+        margin: 2px 0 !important;
     }
 
-    .custom-table th {
-        background: #f0f0f0 !important;
-        color: #000 !important;
-        border-bottom: 1px solid #333 !important;
+    /* Profile Banner */
+    .user-profile-banner {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 10px 12px !important;
+        margin-bottom: 12px !important;
+        border-radius: 6px !important;
+        page-break-inside: avoid !important;
     }
 
-    .custom-table td {
-        border-bottom: 1px solid #ddd !important;
-        color: #000 !important;
+    .user-meta-chips {
+        gap: 8px !important;
     }
 
-    .kundli-svg-container {
-        border: 2px solid #000 !important;
+    .user-meta-chips .meta-chip {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #334155 !important;
+        font-size: 8pt !important;
+        padding: 2px 6px !important;
+    }
+
+    /* Core Profile Cards Grid */
+    .core-profile-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 10px !important;
+        margin-bottom: 15px !important;
+        page-break-inside: avoid !important;
+    }
+
+    .profile-card {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+        padding: 8px 10px !important;
         box-shadow: none !important;
-        background: #fff !important;
+        color: #0f172a !important;
+        page-break-inside: avoid !important;
     }
 
-    .kundli-svg line, .kundli-svg rect, .kundli-svg polygon {
-        stroke: #000 !important;
+    .profile-card::before {
+        background: #2563eb !important;
     }
 
-    .kundli-rashi-num {
-        fill: #000 !important;
+    .card-label {
+        font-size: 7.5pt !important;
+        color: #475569 !important;
     }
 
-    .kundli-planet-tag {
-        fill: #333 !important;
+    .card-subtext {
+        font-size: 8pt !important;
+        color: #334155 !important;
+        margin-bottom: 4px !important;
     }
 
     .card-expandable-content {
         display: block !important;
-        color: #333 !important;
+        font-size: 7.5pt !important;
+        color: #475569 !important;
+        border-top: 1px solid #e2e8f0 !important;
+        margin-top: 4px !important;
+        padding-top: 4px !important;
     }
-}
 
-/* ==========================================================================
-   High-Definition PDF Export Theme Mode (Triggered by exportReportToPDF)
-   ========================================================================== */
-body.pdf-export-mode {
-    background: #ffffff !important;
-    color: #0f172a !important;
-    font-family: Arial, Helvetica, sans-serif !important;
-}
+    /* Glass Cards */
+    .glass-card {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        color: #0f172a !important;
+        page-break-inside: avoid !important;
+        margin-bottom: 12px !important;
+        padding: 10px 12px !important;
+        border-radius: 6px !important;
+    }
 
-body.pdf-export-mode .container,
-body.pdf-export-mode main {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-}
+    /* SVG Kundli Chart */
+    .kundli-chart-wrapper {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 10px 0 !important;
+        page-break-inside: avoid !important;
+    }
 
-body.pdf-export-mode #dashboard-content,
-body.pdf-export-mode #numerology-results-box {
-    background: #ffffff !important;
-    color: #0f172a !important;
-    padding: 10px 15px !important;
-    margin-top: 0 !important;
-}
+    .kundli-svg-container {
+        width: 320px !important;
+        height: 320px !important;
+        background: #ffffff !important;
+        border: 2px solid #0f172a !important;
+        box-shadow: none !important;
+    }
 
-/* Hide non-printable UI controls */
-body.pdf-export-mode header.site-header,
-body.pdf-export-mode footer.site-footer,
-body.pdf-export-mode #star-canvas,
-body.pdf-export-mode .no-print,
-body.pdf-export-mode .btn,
-body.pdf-export-mode button,
-body.pdf-export-mode .mobile-menu-btn,
-body.pdf-export-mode .modal-overlay,
-body.pdf-export-mode .modal-overlay.active,
-body.pdf-export-mode #print-save-modal-overlay,
-body.pdf-export-mode #print-save-modal-overlay.active,
-body.pdf-export-mode #calc-modal-overlay,
-body.pdf-export-mode #pdf-export-toast,
-body.pdf-export-mode .card-expand-toggle {
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    z-index: -9999 !important;
-}
+    .kundli-svg line,
+    .kundli-svg rect,
+    .kundli-svg polygon,
+    .kundli-svg path {
+        stroke: #0f172a !important;
+        stroke-width: 2px !important;
+    }
 
-/* Force Print Header & Footer Banners */
-body.pdf-export-mode .print-header-banner,
-body.pdf-export-mode .print-footer-banner {
-    display: block !important;
-    color: #0f172a !important;
-    text-align: center;
-}
+    .kundli-rashi-num {
+        fill: #1d4ed8 !important;
+        font-weight: bold !important;
+        font-size: 13px !important;
+    }
 
-body.pdf-export-mode .print-header-banner {
-    border-bottom: 2px solid #0f172a;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-}
+    .kundli-planet-tag {
+        fill: #0f172a !important;
+        font-weight: bold !important;
+        font-size: 12px !important;
+    }
 
-body.pdf-export-mode .print-header-banner h1 {
-    font-size: 20pt !important;
-    color: #0f172a !important;
-    margin-bottom: 4px;
-    font-weight: bold !important;
-}
+    /* Custom Tables */
+    .custom-table {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        width: 100% !important;
+        border-collapse: collapse !important;
+        page-break-inside: avoid !important;
+    }
 
-/* Typography Overrides (FIXES GOLD GRADIENT TEXT BOX BUG) */
-body.pdf-export-mode .section-title,
-body.pdf-export-mode .section-subtitle,
-body.pdf-export-mode h1,
-body.pdf-export-mode h2,
-body.pdf-export-mode h3,
-body.pdf-export-mode h4,
-body.pdf-export-mode p,
-body.pdf-export-mode span,
-body.pdf-export-mode div,
-body.pdf-export-mode td,
-body.pdf-export-mode th {
-    color: #0f172a !important;
-    -webkit-text-fill-color: initial !important;
-    -webkit-background-clip: initial !important;
-    background: none !important;
-    text-shadow: none !important;
-}
+    .custom-table th {
+        background: #f1f5f9 !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+        font-weight: bold !important;
+        padding: 5px 8px !important;
+        font-size: 8.5pt !important;
+    }
 
-body.pdf-export-mode .gold-text {
-    background: none !important;
-    -webkit-background-clip: initial !important;
-    -webkit-text-fill-color: initial !important;
-    color: #1d4ed8 !important;
-    font-weight: bold !important;
-}
-
-body.pdf-export-mode .card-value {
-    color: #1e40af !important;
-    font-size: 1.25rem !important;
-    font-weight: bold !important;
-}
-
-/* Convert Grid to Flex for Accurate Height Measurement */
-body.pdf-export-mode .core-profile-grid,
-body.pdf-export-mode .numerology-highlights-grid {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 12px !important;
-    margin-bottom: 1.5rem !important;
-}
-
-body.pdf-export-mode .profile-card {
-    width: 48% !important;
-    min-width: 260px !important;
-    box-sizing: border-box !important;
-    background: #ffffff !important;
-    border: 1px solid #cbd5e1 !important;
-    box-shadow: none !important;
-    color: #0f172a !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    padding: 1rem !important;
-}
-
-body.pdf-export-mode .glass-card {
-    background: #ffffff !important;
-    border: 1px solid #cbd5e1 !important;
-    box-shadow: none !important;
-    color: #0f172a !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    margin-bottom: 1rem !important;
-    padding: 1.25rem !important;
-}
-
-body.pdf-export-mode .profile-card::before {
-    background: #2563eb !important;
-}
-
-body.pdf-export-mode .user-profile-banner {
-    background: #f8fafc !important;
-    border: 1px solid #cbd5e1 !important;
-    padding: 1.25rem !important;
-    margin-bottom: 1.5rem !important;
-    page-break-inside: avoid !important;
-}
-
-body.pdf-export-mode .user-meta-chips .meta-chip {
-    background: #ffffff !important;
-    border: 1px solid #cbd5e1 !important;
-    color: #334155 !important;
-}
-
-/* Expandable content visible in PDF */
-body.pdf-export-mode .card-expandable-content {
-    display: block !important;
-    color: #334155 !important;
-    border-top: 1px solid #e2e8f0 !important;
-    margin-top: 0.5rem !important;
-    padding-top: 0.5rem !important;
-}
-
-/* Kundli SVG Chart Styling for PDF */
-body.pdf-export-mode .kundli-chart-wrapper {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    margin: 1rem 0 !important;
-}
-
-body.pdf-export-mode .kundli-svg-container {
-    width: 380px !important;
-    height: 380px !important;
-    background: #ffffff !important;
-    border: 2px solid #0f172a !important;
-    box-shadow: none !important;
-}
-
-body.pdf-export-mode .kundli-svg line,
-body.pdf-export-mode .kundli-svg rect,
-body.pdf-export-mode .kundli-svg polygon,
-body.pdf-export-mode .kundli-svg path {
-    stroke: #0f172a !important;
-    stroke-width: 2px !important;
-}
-
-body.pdf-export-mode .kundli-rashi-num {
-    fill: #1d4ed8 !important;
-    font-weight: bold !important;
-    font-size: 14px !important;
-}
-
-body.pdf-export-mode .kundli-planet-tag {
-    fill: #0f172a !important;
-    font-weight: bold !important;
-    font-size: 13px !important;
-}
-
-/* Table Styling for PDF */
-body.pdf-export-mode .custom-table {
-    background: #ffffff !important;
-    border: 1px solid #cbd5e1 !important;
-    width: 100% !important;
-}
-
-body.pdf-export-mode .custom-table th {
-    background: #f1f5f9 !important;
-    color: #0f172a !important;
-    border-bottom: 2px solid #cbd5e1 !important;
-    font-weight: bold !important;
-    padding: 8px 10px !important;
-}
-
-body.pdf-export-mode .custom-table td {
-    background: #ffffff !important;
-    color: #1e293b !important;
-    border-bottom: 1px solid #e2e8f0 !important;
-    padding: 8px 10px !important;
+    .custom-table td {
+        background: #ffffff !important;
+        color: #1e293b !important;
+        border: 1px solid #e2e8f0 !important;
+        padding: 5px 8px !important;
+        font-size: 8pt !important;
+    }
 }
 

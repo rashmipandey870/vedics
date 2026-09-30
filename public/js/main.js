@@ -296,7 +296,7 @@ function closePrintSaveModal() {
  * Toggles high-contrast light mode (.pdf-export-mode) for crisp 300 DPI vector-sharp output
  */
 async function exportReportToPDF(targetElementId = 'dashboard-content', reportTitle = null) {
-    // 1. Immediately close and hide any open modal dialogs
+    // 1. Close and hide any open modal dialogs
     closePrintSaveModal();
     const activeModals = document.querySelectorAll('.modal-overlay');
     activeModals.forEach(m => {
@@ -304,81 +304,21 @@ async function exportReportToPDF(targetElementId = 'dashboard-content', reportTi
         m.style.display = 'none';
     });
 
-    // 2. Short pause for browser DOM repaint so open modals vanish completely before capture
-    await new Promise(resolve => setTimeout(resolve, 150));
-
-    const userName = (window.currentProfileData && window.currentProfileData.userMeta && window.currentProfileData.userMeta.name) 
-        ? window.currentProfileData.userMeta.name.replace(/[^a-zA-Z0-9]/g, '_') 
-        : 'Vedic_Birth_Profile';
-    
-    const element = document.getElementById(targetElementId);
-    if (!element) {
-        alert("Report content not found to generate PDF.");
-        activeModals.forEach(m => m.style.display = '');
-        return;
-    }
-
-    // Fallback to native vector print if html2pdf isn't present
-    if (typeof html2pdf === 'undefined') {
-        alert("Preparing vector print... Please select 'Save as PDF' as your Destination in the Print window.");
-        activeModals.forEach(m => m.style.display = '');
-        window.print();
-        return;
-    }
-
-    // 3. Activate high-contrast 300 DPI PDF Export Theme
-    document.body.classList.add('pdf-export-mode');
-
-    // 4. Expand all card accordion details so everything is printed cleanly
+    // 2. Expand all card accordion details so everything is printed cleanly
+    const element = document.getElementById(targetElementId) || document.body;
     const expandableContents = element.querySelectorAll('.card-expandable-content');
     expandableContents.forEach(el => el.classList.add('open'));
 
-    // Show loading Toast notification
-    let toast = document.getElementById('pdf-export-toast');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'pdf-export-toast';
-        toast.style.cssText = 'position:fixed; bottom:24px; right:24px; background:#2563eb; color:#ffffff; padding:14px 24px; border-radius:10px; z-index:99999; font-weight:bold; font-family:sans-serif; box-shadow:0 10px 25px rgba(0,0,0,0.5); display:flex; align-items:center; gap:10px; border:1px solid #60a5fa;';
-        document.body.appendChild(toast);
-    }
-    toast.innerHTML = '<span>📄</span> <span>Generating 300 DPI razor-sharp PDF report... Please wait.</span>';
-    toast.style.display = 'flex';
+    // 3. Short pause for browser DOM repaint
+    await new Promise(resolve => setTimeout(resolve, 150));
 
-    const fileName = reportTitle ? `${reportTitle}.pdf` : `JeevanShaili_Report_${userName}.pdf`;
+    // 4. Trigger Native Vector Print (Select "Save as PDF" in print window for 100% vector sharp PDF)
+    window.print();
 
-    const opt = {
-        margin:       [0.3, 0.3, 0.3, 0.3],
-        filename:     fileName,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { 
-            scale: 2,                  // High resolution print scale
-            useCORS: true, 
-            logging: false, 
-            backgroundColor: '#ffffff',
-            letterRendering: true,
-            scrollY: 0,                // CRITICAL: Prevents 7 blank pages caused by scroll offset!
-            windowWidth: 1000          // Consistent paper layout width
-        },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait', compress: true },
-        pagebreak:    { mode: ['css', 'legacy'] }
-    };
-
-    try {
-        await html2pdf().set(opt).from(element).save();
-    } catch (err) {
-        console.error('PDF export error:', err);
-    } finally {
-        // Restore dark UI theme on screen & restore modal display styles
-        document.body.classList.remove('pdf-export-mode');
+    // 5. Restore modal display styles after print dialog closes
+    setTimeout(() => {
         activeModals.forEach(m => m.style.display = '');
-
-        toast.style.background = '#16a34a';
-        toast.style.borderColor = '#4ade80';
-        toast.innerHTML = '<span>✅</span> <span>Razor-Sharp PDF Downloaded Successfully!</span>';
-        setTimeout(() => {
-            toast.style.display = 'none';
-        }, 3500);
-    }
+    }, 500);
 }
 
 window.openPrintSaveModal = openPrintSaveModal;
