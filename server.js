@@ -1,5 +1,5 @@
 /**
- * RashmiSutra - Express Server Entry Point
+ * JeevanShaili - Express Server Entry Point
  * 
  * "Vedic Astrology & Numerology Calculator"
  * Built by Rashmi Pandey.
@@ -14,7 +14,7 @@ const apiRoutes = require('./server/routes/apiRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/rashmisutra';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/jeevanshaili';
 
 // Middleware
 app.use(cors());
@@ -55,13 +55,13 @@ mongoose.connect(MONGO_URI, {
     console.log('✅ Connected to local MongoDB database at:', MONGO_URI);
 }).catch((err) => {
     console.log('⚠️ [MongoDB Note] Local MongoDB daemon not detected on localhost:27017.');
-    console.log('ℹ️ RashmiSutra is operating in Session Fallback Mode (Profiles will save in-memory).');
+    console.log('ℹ️ JeevanShaili is operating in Session Fallback Mode (Profiles will save in-memory).');
 });
 
 // Start Server
 app.listen(PORT, () => {
     console.log(`================================================================`);
-    console.log(`🌌 RashmiSutra Server active at http://localhost:${PORT}`);
+    console.log(`🌌 JeevanShaili Server active at http://localhost:${PORT}`);
     console.log(`📜 Vedic Astrology • Numerology • Dasha Engine`);
     console.log(`👩‍💻 Built by Rashmi Pandey | B.Tech Computer Science Project`);
     console.log(`================================================================`);

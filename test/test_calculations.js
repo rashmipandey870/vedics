@@ -1,5 +1,5 @@
 /**
- * RashmiSutra - Automated Calculation Test Suite
+ * JeevanShaili - Automated Calculation Test Suite
  * Run with: node test/test_calculations.js
  * 
  * Verifies boundaries, sequences, 120y Dasha sums, numerology reductions, Vargottama detection, and compatibility symmetry.
@@ -14,7 +14,7 @@ const nakshatras = require('../data/nakshatras');
 const dashaData = require('../data/dasha');
 
 console.log("==================================================================");
-console.log("🧪 Running RashmiSutra Automated Calculation Test Suite...");
+console.log("🧪 Running JeevanShaili Automated Calculation Test Suite...");
 console.log("==================================================================");
 
 let testsPassed = 0;

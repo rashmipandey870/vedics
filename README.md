@@ -1,10 +1,10 @@
-# 🌌 RashmiSutra
+# 🌌 JeevanShaili
 ### Vedic Astrology • Numerology • Dasha
 
 > **Tagline:** *"Traditional calculations, structured through modern code."*  
 > **Author:** Built by **Rashmi Pandey** (B.Tech Computer Science & Engineering)
 
-RashmiSutra is a full-stack web software project that implements traditional Vedic Sidereal astrology calculations (Rashi, Nakshatra, Pada, Paya, Lagna, Navagraha Sidereal longitudes, interactive North Indian Kundli chart visualization, Vimshottari Dasha timeline) and a transparent numerology calculation engine (Mulank, Bhagyank, Name Number with step-by-step digit reduction math).
+JeevanShaili is a full-stack web software project that implements traditional Vedic Sidereal astrology calculations (Rashi, Nakshatra, Pada, Paya, Lagna, Navagraha Sidereal longitudes, interactive North Indian Kundli chart visualization, Vimshottari Dasha timeline) and a transparent numerology calculation engine (Mulank, Bhagyank, Name Number with step-by-step digit reduction math).
 
 ---
 
@@ -12,10 +12,10 @@ RashmiSutra is a full-stack web software project that implements traditional Ved
 ```text
 Rashmi      = Ray of light / Identity
 Sutra       = Structured principle or calculation rule
-RashmiSutra = Traditional calculation rules implemented through modern software
+JeevanShaili = Traditional calculation rules implemented through modern software
 ```
 
-The primary objective of RashmiSutra is to provide a clean, visually impressive, and feature-rich web platform for traditional Vedic calculations while keeping the software architecture modular, transparent, and easy to explain during a college B.Tech viva examination.
+The primary objective of JeevanShaili is to provide a clean, visually impressive, and feature-rich web platform for traditional Vedic calculations while keeping the software architecture modular, transparent, and easy to explain during a college B.Tech viva examination.
 
 ---
 
@@ -60,7 +60,7 @@ The primary objective of RashmiSutra is to provide a clean, visually impressive,
 ## 📁 System Architecture & Folder Structure
 
 ```text
-RashmiSutra/
+JeevanShaili/
 ├── package.json               # Project dependencies (express, mongoose, cors, dotenv)
 ├── server.js                  # Main Express Server & MongoDB Connection setup
 ├── README.md                  # Comprehensive Documentation & Viva Q&A Guide
@@ -207,7 +207,7 @@ RashmiSutra/
 ---
 
 ## 🔮 Scope & Limitations
-- **RashmiSutra** is an educational software implementation of selected traditional calculation methods.
+- **JeevanShaili** is an educational software implementation of selected traditional calculation methods.
 - Derived results are based on transparent mathematical rule-engines and are not presented as scientific facts.
 
 ---

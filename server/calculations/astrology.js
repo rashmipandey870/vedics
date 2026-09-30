@@ -1,5 +1,5 @@
 /**
- * RashmiSutra - Vedic Astrology Rule Engine
+ * JeevanShaili - Vedic Astrology Rule Engine
  * 
  * Reusable constants, Rashi, Nakshatra, Pada, Paya, Planetary Dignities, Combustion, Retrograde, and Graha Drishti.
  * 

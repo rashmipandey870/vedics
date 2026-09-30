@@ -1,5 +1,5 @@
 /**
- * RashmiSutra - Divisional Charts Engine (Varga Engine)
+ * JeevanShaili - Divisional Charts Engine (Varga Engine)
  * 
  * Calculates standard Parashari Divisional Charts:
  * - D1: Rashi Chart (Main birth chart)

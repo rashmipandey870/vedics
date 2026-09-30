@@ -1,5 +1,5 @@
 /**
- * RashmiSutra - Dedicated Numerology Module Frontend Logic
+ * JeevanShaili - Dedicated Numerology Module Frontend Logic
  * Author: Rashmi Pandey
  */
 

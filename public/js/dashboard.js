@@ -1,11 +1,11 @@
 /**
- * RashmiSutra - Dashboard Page Controller
+ * JeevanShaili - Dashboard Page Controller
  * Author: Rashmi Pandey
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     // Check if birth data exists in session storage
-    const savedData = sessionStorage.getItem('jyotishsetu_birth_data');
+    const savedData = sessionStorage.getItem('jeevanshaili_birth_data');
     
     if (savedData) {
         const formData = JSON.parse(savedData);

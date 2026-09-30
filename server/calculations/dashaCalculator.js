@@ -1,5 +1,5 @@
 /**
- * RashmiSutra - Vimshottari Dasha Calculator Engine
+ * JeevanShaili - Vimshottari Dasha Calculator Engine
  * 
  * Algorithm:
  * 1. Find Moon's Sidereal Nakshatra and its ruling Graha (Lord).

@@ -1,5 +1,5 @@
 /**
- * RashmiSutra - High-Precision Astronomical Sidereal Calculation Engine
+ * JeevanShaili - High-Precision Astronomical Sidereal Calculation Engine
  * 
  * Powered by VSOP87 Ephemeris Engine (via astronomy-engine) for exact planetary positions,
  * Moon longitude, Rahu/Ketu, and Lagna (Ascendant).

@@ -1,5 +1,5 @@
 /**
- * RashmiSutra - Main Frontend JavaScript
+ * JeevanShaili - Main Frontend JavaScript
  * Common UI helpers, Canvas Starfield background, Intelligent City Geocoding Engine, Navigation
  */
 

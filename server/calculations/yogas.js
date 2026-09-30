@@ -1,5 +1,5 @@
 /**
- * RashmiSutra - Vedic Yogas Calculation Engine
+ * JeevanShaili - Vedic Yogas Calculation Engine
  * 
  * Evaluates classical Parashari Yogas (Planetary Combinations) and their life benefits:
  * - Gaja Kesari Yoga

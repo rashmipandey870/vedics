@@ -1,6 +1,6 @@
 /**
  * Mongoose Schema for Birth Profiles
- * Database: local MongoDB (mongodb://localhost:27017/jyotishsetu)
+ * Database: local MongoDB (mongodb://localhost:27017/jeevanshaili)
  */
 
 const mongoose = require('mongoose');

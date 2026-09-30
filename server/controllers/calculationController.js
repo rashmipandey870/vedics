@@ -1,5 +1,5 @@
 /**
- * RashmiSutra - Controller for Astrological & Numerological Calculations
+ * JeevanShaili - Controller for Astrological & Numerological Calculations
  * Author: Rashmi Pandey
  */
 

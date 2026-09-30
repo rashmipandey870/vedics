@@ -1,5 +1,5 @@
 /**
- * RashmiSutra - Dasha Timeline UI Renderer
+ * JeevanShaili - Dasha Timeline UI Renderer
  * Includes Vimshottari Mahadasha timeline, Antardasha sub-period breakdown, and calculation steps modal trigger.
  * 
  * Author: Rashmi Pandey

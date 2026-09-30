@@ -1,5 +1,5 @@
 /**
- * RashmiSutra - Numerology Calculation Engine
+ * JeevanShaili - Numerology Calculation Engine
  * 
  * Functions:
  * 1. Mulank (Birth Day Number)
@@ -108,7 +108,7 @@ function calculateBhagyank(dobString) {
         graha,
         steps,
         profile,
-        methodologyNote: "In RashmiSutra, Bhagyank is calculated by reducing the complete date of birth according to the selected Indian numerology convention."
+        methodologyNote: "In JeevanShaili, Bhagyank is calculated by reducing the complete date of birth according to the selected Indian numerology convention."
     };
 }
 

@@ -1,5 +1,5 @@
 /**
- * RashmiSutra - Frontend Astrology Rendering & Calculation Details Engine
+ * JeevanShaili - Frontend Astrology Rendering & Calculation Details Engine
  * Renders North Indian Kundli SVG Chart with interactive House Popups and Calculation Modals.
  * 
  * Author: Rashmi Pandey

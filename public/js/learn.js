@@ -1,5 +1,5 @@
 /**
- * JyotishSetu - Learn Vedic Astrology & 27 Nakshatras Interactive Grid
+ * JeevanShaili - Learn Vedic Astrology & 27 Nakshatras Interactive Grid
  */
 
 document.addEventListener('DOMContentLoaded', () => {
