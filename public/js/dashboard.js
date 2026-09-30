@@ -118,7 +118,7 @@ function renderCoreCards(core) {
             
             <div style="display: flex; gap: 0.5rem; margin-top: auto;">
                 <button class="card-expand-toggle">Learn more ▼</button>
-                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick='showCalculationStepsModal("Rashi Calculation", ${JSON.stringify(core.rashi.calculationSteps)})'>🧮 View Math</button>
+                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick="showCalculationStepsModal('rashi')">🧮 View Math</button>
             </div>
             
             <div class="card-expandable-content">
@@ -137,7 +137,7 @@ function renderCoreCards(core) {
             
             <div style="display: flex; gap: 0.5rem; margin-top: auto;">
                 <button class="card-expand-toggle">Learn more ▼</button>
-                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick='showCalculationStepsModal("Nakshatra Calculation", ${JSON.stringify(core.nakshatra.calculationSteps)})'>🧮 View Math</button>
+                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick="showCalculationStepsModal('nakshatra')">🧮 View Math</button>
             </div>
             
             <div class="card-expandable-content">
@@ -156,7 +156,7 @@ function renderCoreCards(core) {
             
             <div style="display: flex; gap: 0.5rem; margin-top: auto;">
                 <button class="card-expand-toggle">Learn more ▼</button>
-                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick='showCalculationStepsModal("Pada Calculation", ${JSON.stringify(core.pada.calculationSteps)})'>🧮 View Math</button>
+                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick="showCalculationStepsModal('pada')">🧮 View Math</button>
             </div>
 
             <div class="card-expandable-content">
@@ -173,7 +173,7 @@ function renderCoreCards(core) {
             
             <div style="display: flex; gap: 0.5rem; margin-top: auto;">
                 <button class="card-expand-toggle">Learn more ▼</button>
-                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick='showCalculationStepsModal("Nakshatra Lord Mapping", ${JSON.stringify(core.nakshatraLord.calculationSteps)})'>🧮 View Math</button>
+                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick="showCalculationStepsModal('nakshatraLord')">🧮 View Math</button>
             </div>
 
             <div class="card-expandable-content">
@@ -190,7 +190,7 @@ function renderCoreCards(core) {
             
             <div style="display: flex; gap: 0.5rem; margin-top: auto;">
                 <button class="card-expand-toggle">Learn more ▼</button>
-                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick='showCalculationStepsModal("Paya Metal Rule", ${JSON.stringify(core.paya.calculationSteps)})'>🧮 View Math</button>
+                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick="showCalculationStepsModal('paya')">🧮 View Math</button>
             </div>
 
             <div class="card-expandable-content">
@@ -208,7 +208,7 @@ function renderCoreCards(core) {
             
             <div style="display: flex; gap: 0.5rem; margin-top: auto;">
                 <button class="card-expand-toggle">Learn more ▼</button>
-                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick='showCalculationStepsModal("Lagna Calculation", ${JSON.stringify(core.lagna.calculationSteps)})'>🧮 View Math</button>
+                <button class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding: 0.2rem 0.6rem;" onclick="showCalculationStepsModal('lagna')">🧮 View Math</button>
             </div>
 
             <div class="card-expandable-content">
@@ -377,19 +377,19 @@ function renderNumerologySummary(num) {
             <div class="num-card-badge">${num.mulank}</div>
             <h3>Mulank (Birth Number)</h3>
             <p style="font-size: 0.9rem; margin: 0.3rem 0 0.85rem 0;">${num.mulankData.profile.title}</p>
-            <button class="btn btn-secondary btn-sm" onclick='showCalculationStepsModal("Mulank Calculation", ${JSON.stringify(num.mulankData.steps)})'>🧮 View Reduction Steps</button>
+            <button class="btn btn-secondary btn-sm" onclick="showCalculationStepsModal('mulank')">🧮 View Reduction Steps</button>
         </div>
         <div class="glass-card text-center">
             <div class="num-card-badge">${num.bhagyank}</div>
             <h3>Bhagyank (Life Path / Destiny)</h3>
             <p style="font-size: 0.9rem; margin: 0.3rem 0 0.85rem 0;">${num.bhagyankData.profile.title}</p>
-            <button class="btn btn-secondary btn-sm" onclick='showCalculationStepsModal("Bhagyank Calculation", ${JSON.stringify(num.bhagyankData.steps)})'>🧮 View Reduction Steps</button>
+            <button class="btn btn-secondary btn-sm" onclick="showCalculationStepsModal('bhagyank')">🧮 View Reduction Steps</button>
         </div>
         <div class="glass-card text-center">
             <div class="num-card-badge">${num.nameNumber}</div>
             <h3>Name Number</h3>
             <p style="font-size: 0.9rem; margin: 0.3rem 0 0.85rem 0;">${num.nameNumberData.profile.title}</p>
-            <button class="btn btn-secondary btn-sm" onclick='showCalculationStepsModal("Name Number Calculation", ${JSON.stringify(num.nameNumberData.steps)})'>🧮 View Letter Mapping</button>
+            <button class="btn btn-secondary btn-sm" onclick="showCalculationStepsModal('nameNumber')">🧮 View Letter Mapping</button>
         </div>
     `;
 }

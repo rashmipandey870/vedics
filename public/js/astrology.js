@@ -195,15 +195,60 @@ window.showHouseDetailModal = function(houseNum) {
 /**
  * Universal Calculation Breakdown Modal Handler for Viva Presentation
  */
-window.showCalculationStepsModal = function(title, stepsArray) {
+window.showCalculationStepsModal = function(keyOrTitle, stepsArray = null) {
     const modal = document.getElementById('calc-modal-overlay');
     const body = document.getElementById('calc-modal-body');
-    if (!modal || !body || !stepsArray) return;
+    if (!modal || !body) return;
 
-    let stepsHTML = stepsArray.map((s, idx) => `
-        <div style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--gold-primary); padding: 0.75rem 1rem; margin-bottom: 0.75rem; border-radius: 4px;">
+    let steps = [];
+    let title = "Calculation Steps";
+
+    const data = window.currentProfileData;
+    const core = data ? data.coreProfile : null;
+    const num = data ? data.numerology : null;
+
+    if (keyOrTitle === 'rashi' && core && core.rashi) {
+        title = "Rashi (Moon Sign) Calculation";
+        steps = core.rashi.calculationSteps || [];
+    } else if (keyOrTitle === 'nakshatra' && core && core.nakshatra) {
+        title = "Nakshatra Calculation";
+        steps = core.nakshatra.calculationSteps || [];
+    } else if (keyOrTitle === 'pada' && core && core.pada) {
+        title = "Pada (Quarter) Calculation";
+        steps = core.pada.calculationSteps || [];
+    } else if (keyOrTitle === 'nakshatraLord' && core && core.nakshatraLord) {
+        title = "Nakshatra Lord Mapping";
+        steps = core.nakshatraLord.calculationSteps || [];
+    } else if (keyOrTitle === 'paya' && core && core.paya) {
+        title = "Paya Metal Rule";
+        steps = core.paya.calculationSteps || [];
+    } else if (keyOrTitle === 'lagna' && core && core.lagna) {
+        title = "Lagna (Ascendant) Calculation";
+        steps = core.lagna.calculationSteps || [];
+    } else if (keyOrTitle === 'mulank' && num && num.mulankData) {
+        title = "Mulank (Birth Number) Calculation";
+        steps = num.mulankData.steps || [];
+    } else if (keyOrTitle === 'bhagyank' && num && num.bhagyankData) {
+        title = "Bhagyank (Destiny Number) Calculation";
+        steps = num.bhagyankData.steps || [];
+    } else if (keyOrTitle === 'nameNumber' && num && num.nameNumberData) {
+        title = "Name Number Calculation";
+        steps = num.nameNumberData.steps || [];
+    } else if (Array.isArray(stepsArray)) {
+        title = keyOrTitle || "Calculation Steps";
+        steps = stepsArray;
+    } else if (Array.isArray(keyOrTitle)) {
+        steps = keyOrTitle;
+    }
+
+    if (!steps || steps.length === 0) {
+        steps = ["Calculation pipeline executed using VSOP87 Sidereal Astrological Engine."];
+    }
+
+    let stepsHTML = steps.map((s, idx) => `
+        <div style="background: rgba(255, 255, 255, 0.04); border-left: 3px solid var(--gold-primary); padding: 0.75rem 1rem; margin-bottom: 0.75rem; border-radius: 4px;">
             <span style="font-size: 0.75rem; color: var(--gold-light); display: block; margin-bottom: 2px;">Step ${idx + 1}</span>
-            <code style="font-size: 0.92rem; color: var(--text-primary); font-family: monospace;">${s}</code>
+            <code style="font-size: 0.92rem; color: var(--text-primary); font-family: monospace;">${typeof s === 'object' ? JSON.stringify(s) : s}</code>
         </div>
     `).join('');
 
@@ -213,6 +258,8 @@ window.showCalculationStepsModal = function(title, stepsArray) {
         ${stepsHTML}
     `;
 
+    modal.style.display = 'flex';
+    void modal.offsetWidth;
     modal.classList.add('active');
 };
 
